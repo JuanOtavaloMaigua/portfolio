@@ -1,0 +1,29 @@
+:root{
+    --page-bg-color: #022140
+}
+
+body{
+    background-color: var(--page-bg-color);
+}
+
+.hablemos-container{
+    width: 100%;
+    height: 30px;
+    border-color: aqua;
+    border-width: 3px;
+    border-style: solid;
+}
+
+/* .hablemos-container{
+    position: absolute;
+    top: 10px;
+    border: 2px grey;
+    border-radius: 3px;
+    width: 100%;
+    height: 30px;
+}
+
+.hablemos-container > button{
+    top: 45px;
+    right: 34px;
+} */
