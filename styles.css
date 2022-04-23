@@ -1,29 +1,107 @@
 :root{
-    --page-bg-color: #022140
+    --page-bg-color: #022140;
+    --secondary-color: #4280EA;
+    --primary-color: #707070;
+    --custom-border-radius: 8px;
+    --third-color: #3FC4BF;
+    --border-width: 0.7px;
 }
 
+/* Fundamentals */
 body{
     background-color: var(--page-bg-color);
 }
 
-.hablemos-container{
-    width: 100%;
-    height: 30px;
-    border-color: aqua;
-    border-width: 3px;
-    border-style: solid;
+header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 30%;
+    margin-bottom: 30px;
 }
 
-/* .hablemos-container{
-    position: absolute;
-    top: 10px;
-    border: 2px grey;
-    border-radius: 3px;
-    width: 100%;
-    height: 30px;
+.normal-text{
+    padding-left: 5px;
+    color: var(--primary-color)
 }
 
-.hablemos-container > button{
-    top: 45px;
-    right: 34px;
-} */
+.primary-highlight{
+    color: var(--third-color);
+    margin-right: 0px;
+}
+
+.secondary-highlight{
+    color: var(--secondary-color);
+    margin-right: 0px;
+}
+
+.text-separator{
+    letter-spacing: 0.7px;
+}
+
+.container-border{
+    border: 1px solid var(--primary-color);
+    border-radius: var(--custom-border-radius);
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* Secondaries */
+.hablemos{
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    width: 22.5%;
+    height: 22px;
+    border: var(--border-width) solid var(--secondary-color);
+    border-radius: var(--custom-border-radius);
+    cursor: pointer;
+}
+
+.hablemos__text{
+    padding: 3px 3px;
+    margin-top: 10px;
+    margin-left: 2px;
+    color: var(--secondary-color);
+    background-color: black;
+    border: var(--border-width) #707070 solid;
+    border-radius: var(--custom-border-radius);
+    width: 120%;
+    letter-spacing: 0.5px;
+}
+
+.article{
+    display: flex;
+    justify-content: center;
+    margin: -20px 0px;
+}
+
+.space-between{
+    margin: 15px 0px;
+}
+
+.hero{
+    display: flex;
+    justify-content: center;
+}
+
+.hero__image-container{
+    border: var(--border-width) solid var(--secondary-color);
+    border-radius: var(--custom-border-radius);
+    margin-left: -10px;
+    width: 90%;
+}
+
+.my-image{
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: var(--custom-border-radius);
+    border: var(--border-width) solid var(--primary-color);
+    margin-top: -5px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+
