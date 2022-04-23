@@ -22,13 +22,13 @@ header{
 }
 
 .normal-text{
-    padding-left: 5px;
+    padding: 0px 5px;
     color: var(--primary-color)
 }
 
 .primary-highlight{
     color: var(--third-color);
-    margin-right: 0px;
+    padding: 0px 5px;
 }
 
 .secondary-highlight{
@@ -91,6 +91,12 @@ header{
     border-radius: var(--custom-border-radius);
     margin-left: -10px;
     width: 90%;
+}
+
+.text-container{
+    border: var(--border-width) solid var(--primary-color);
+    border-radius: var(--custom-border-radius);
+    text-align: center;
 }
 
 .my-image{
