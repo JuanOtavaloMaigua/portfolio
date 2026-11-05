@@ -1,0 +1,85 @@
+---
+import { SITE } from '@/config/site';
+import { LOCALES, LOCALE_TAGS, DEFAULT_LOCALE, localizePath, type Locale } from '@/i18n';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  /** Route without locale prefix, e.g. "" or "lab". */
+  path?: string;
+  /** Absolute or root-relative image path. */
+  image?: string;
+  /** Set false for pages that only exist in one locale (e.g. 404). */
+  alternates?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  locale,
+  path = '',
+  image = SITE.ogImage,
+  alternates = true,
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL(SITE.url);
+const canonical = new URL(localizePath(locale, path), site).href;
+const imageUrl = new URL(image, site).href;
+const ogLocale = LOCALE_TAGS[locale].og;
+const ogAlternateLocales = LOCALES.filter((l) => l !== locale).map((l) => LOCALE_TAGS[l].og);
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  url: new URL(localizePath(locale), site).href,
+  image: new URL('/avatar.jpg', site).href,
+  jobTitle: SITE.jobTitle,
+  email: `mailto:${SITE.email}`,
+  description,
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'EC',
+  },
+  sameAs: [SITE.linkedinUrl, SITE.githubUrl],
+  knowsAbout: ['Django', 'React', 'TypeScript', 'ERP', 'RFID', 'PostgreSQL', 'AI agents'],
+};
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+
+{
+  alternates && (
+    <>
+      {LOCALES.map((l) => (
+        <link rel="alternate" hreflang={LOCALE_TAGS[l].html} href={new URL(localizePath(l, path), site).href} />
+      ))}
+      <link rel="alternate" hreflang="x-default" href={new URL(localizePath(DEFAULT_LOCALE, path), site).href} />
+    </>
+  )
+}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
+<meta property="og:locale" content={ogLocale} />
+{ogAlternateLocales.map((l) => <meta property="og:locale:alternate" content={l} />)}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(personJsonLd)} />

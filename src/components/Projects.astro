@@ -1,0 +1,26 @@
+---
+import Section from '@/components/Section.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { getFeaturedProjects } from '@/lib/content';
+import { getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const projects = await getFeaturedProjects(locale);
+---
+
+<Section id="projects" eyebrow={t.projects.eyebrow} title={t.projects.title} intro={t.projects.intro}>
+  <ul class="space-y-4">
+    {
+      projects.map((project) => (
+        <li>
+          <ProjectCard project={project} locale={locale} />
+        </li>
+      ))
+    }
+  </ul>
+</Section>

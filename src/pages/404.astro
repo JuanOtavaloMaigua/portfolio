@@ -1,0 +1,20 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getDictionary, localizePath } from '@/i18n';
+
+const es = getDictionary('es');
+const en = getDictionary('en');
+---
+
+<BaseLayout locale="es" title={es.meta.notFoundTitle} description={es.meta.notFoundDescription} alternates={false} noindex>
+  <section class="container-page py-20 sm:py-28" aria-labelledby="nf-title">
+    <p class="font-mono text-xs tracking-wide text-accent">404</p>
+    <h1 id="nf-title" class="mt-2 text-3xl font-semibold tracking-tight text-fg sm:text-4xl">{es.notFound.title}</h1>
+    <p class="mt-4 text-muted">{es.notFound.text}</p>
+    <p class="mt-2 text-muted" lang="en">{en.notFound.text}</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <a href={localizePath('es')} class="btn btn-primary">{es.notFound.back}</a>
+      <a href={localizePath('en')} class="btn btn-secondary" lang="en">{en.notFound.back}</a>
+    </div>
+  </section>
+</BaseLayout>

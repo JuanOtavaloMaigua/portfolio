@@ -1,0 +1,43 @@
+---
+import { LOCALES, LOCALE_NAMES, LOCALE_TAGS, getDictionary, localizePath, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+  path?: string;
+}
+
+const { locale, path = '' } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<ul class="flex items-center font-mono text-xs" aria-label={t.a11y.language}>
+  {
+    LOCALES.map((l, index) => (
+      <li class="flex items-center">
+        {index > 0 && (
+          <span class="px-0.5 text-muted" aria-hidden="true">
+            /
+          </span>
+        )}
+        {l === locale ? (
+          <span class="inline-flex min-h-11 items-center px-1.5 font-medium text-fg" aria-current="true">
+            {l.toUpperCase()}
+            <span class="sr-only"> — {LOCALE_NAMES[l]}</span>
+          </span>
+        ) : (
+          <a
+            href={localizePath(l, path)}
+            hreflang={LOCALE_TAGS[l].html}
+            class="inline-flex min-h-11 items-center px-1.5 text-muted transition-colors hover:text-fg"
+          >
+            {l.toUpperCase()}
+            <span class="sr-only" lang={LOCALE_TAGS[l].html}>
+              {' '}
+              — {LOCALE_NAMES[l]}
+            </span>
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>

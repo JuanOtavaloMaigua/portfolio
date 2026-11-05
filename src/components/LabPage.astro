@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LabCanvas from '@/components/lab/LabCanvas';
+import { getDictionary, localizePath, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<BaseLayout locale={locale} title={t.meta.labTitle} description={t.meta.labDescription} path="lab">
+  <section class="container-page py-16 sm:py-24" aria-labelledby="lab-title">
+    <p class="font-mono text-xs tracking-wide text-accent uppercase">{t.lab.eyebrow}</p>
+    <h1 id="lab-title" class="mt-2 text-3xl font-semibold tracking-tight text-fg sm:text-4xl">{t.lab.title}</h1>
+    <p class="mt-4 text-muted">{t.lab.text}</p>
+
+    <!-- Future React Three Fiber island. LabCanvas hydrates only when visible. -->
+    <div class="mt-10 aspect-[4/3] w-full overflow-hidden rounded-xl border border-dashed border-border sm:aspect-video">
+      <LabCanvas client:visible />
+    </div>
+
+    <a href={localizePath(locale)} class="link mt-10 inline-flex min-h-11 items-center font-mono text-sm">
+      ← {t.lab.back}
+    </a>
+  </section>
+</BaseLayout>

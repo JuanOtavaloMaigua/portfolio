@@ -1,0 +1,42 @@
+---
+import Section from '@/components/Section.astro';
+import { getExperience } from '@/lib/content';
+import { formatMonthYear, getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+const entries = await getExperience(locale);
+
+const toIso = (date: Date) => date.toISOString().slice(0, 7);
+---
+
+<Section id="experience" eyebrow={t.experience.eyebrow} title={t.experience.title}>
+  <ol class="relative space-y-8 border-l border-border pl-5 sm:border-l-0 sm:pl-0">
+    {
+      entries.map(({ data }) => (
+        <li class="relative sm:grid sm:grid-cols-[9.5rem_1fr] sm:gap-6">
+          <span
+            class="absolute top-1.5 -left-[calc(1.25rem+5.5px)] size-2.5 rounded-full border-2 border-bg bg-border sm:hidden"
+            aria-hidden="true"
+          />
+          <p class="font-mono text-xs leading-6 text-muted">
+            <time datetime={toIso(data.start)}>{formatMonthYear(data.start, locale)}</time>
+            {' – '}
+            {data.end ? <time datetime={toIso(data.end)}>{formatMonthYear(data.end, locale)}</time> : t.experience.present}
+          </p>
+          <div class="mt-1 sm:mt-0 sm:border-l sm:border-border sm:pl-6">
+            <h3 class="font-semibold text-fg">
+              {data.company} <span class="font-normal text-muted">— {data.role}</span>
+            </h3>
+            <p class="font-mono text-xs text-muted">{data.location}</p>
+            <p class="mt-2 text-sm leading-relaxed text-fg/90">{data.summary}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

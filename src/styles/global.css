@@ -1,0 +1,206 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+/* Dark mode is driven by data-theme on <html> (set before paint in BaseLayout). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Design tokens.
+ * To change the accent color, edit --color-accent (light mode) and
+ * --color-accent (dark mode, in the [data-theme="dark"] block below).
+ * Both values were checked for WCAG AA (>= 4.5:1) against their background.
+ */
+@theme static {
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Light palette */
+  --color-bg: #fafaf9;
+  --color-surface: #f5f5f4;
+  --color-fg: #1c1917;
+  --color-muted: #57534e;
+  --color-border: #e7e5e4;
+  /* Deep Andean red. 6.26:1 on --color-bg. */
+  --color-accent: #b4232a;
+  /* Text placed on top of an accent background. 6.53:1 on --color-accent. */
+  --color-on-accent: #ffffff;
+  --color-success: #15803d;
+}
+
+@layer base {
+  [data-theme="dark"] {
+    --color-bg: #0c0c0c;
+    --color-surface: #161616;
+    --color-fg: #f5f5f4;
+    --color-muted: #a8a29e;
+    --color-border: #292524;
+    /* Lighter accent for dark backgrounds. 6.82:1 on --color-bg. */
+    --color-accent: #f0726b;
+    /* 6.82:1 on the dark accent. */
+    --color-on-accent: #0c0c0c;
+    --color-success: #4ade80;
+  }
+
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 720px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 1.125rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-decoration: none;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .btn-primary:hover {
+    background-color: color-mix(in oklab, var(--color-accent) 88%, var(--color-fg));
+  }
+
+  .btn-secondary {
+    border-color: var(--color-border);
+    color: var(--color-fg);
+    background-color: transparent;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-fg);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+
+  .link {
+    color: var(--color-fg);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 150ms ease;
+  }
+
+  .link:hover {
+    text-decoration-color: var(--color-accent);
+  }
+}
+
+/* Scroll reveal: only hides content when JS is running and motion is allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 600ms ease,
+      transform 600ms ease;
+  }
+
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pulse-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: inherit;
+    animation: pulse-ring 2s ease-out infinite;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

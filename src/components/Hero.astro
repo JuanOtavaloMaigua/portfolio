@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import avatar from '@/assets/avatar.jpg';
+import { SITE } from '@/config/site';
+import { getDictionary, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getDictionary(locale);
+---
+
+<section class="container-page pt-12 pb-16 sm:pt-20 sm:pb-20" aria-labelledby="hero-title" data-hero>
+  <Image
+    src={avatar}
+    alt={t.a11y.avatarAlt}
+    width={96}
+    height={96}
+    densities={[1, 2]}
+    loading="eager"
+    fetchpriority="high"
+    class="size-20 rounded-full border border-border object-cover sm:size-24"
+  />
+
+  <p class="mt-8 inline-flex items-center gap-2.5 font-mono text-xs text-muted">
+    <span class="pulse-dot relative inline-block size-2 rounded-full bg-success" aria-hidden="true"></span>
+    {t.hero.availability}
+  </p>
+
+  <h1 id="hero-title" class="mt-4 text-4xl leading-[1.1] font-semibold tracking-tight text-balance text-fg sm:text-5xl">
+    {t.hero.title}
+  </h1>
+
+  <p class="mt-5 max-w-[60ch] text-lg leading-relaxed text-muted text-pretty">
+    {t.hero.subtitle}
+  </p>
+
+  <p class="mt-5 font-mono text-xs leading-relaxed text-muted sm:text-sm">{t.hero.tagline}</p>
+
+  <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+    <a href={SITE.calUrl} class="btn btn-primary" target="_blank" rel="noopener">
+      {t.hero.ctaPrimary}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6"></path>
+      </svg>
+    </a>
+    <a href={`mailto:${SITE.email}`} class="btn btn-secondary">{t.hero.ctaSecondary}</a>
+  </div>
+</section>
