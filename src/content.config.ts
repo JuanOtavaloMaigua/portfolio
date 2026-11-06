@@ -23,6 +23,39 @@ const projects = defineCollection({
   }),
 });
 
+/** Keys of the animated diagrams available to story blocks (see src/components/story/visuals). */
+export const STORY_VISUALS = ['machines', 'recipes', 'pipeline', 'command', 'tenants'] as const;
+
+/**
+ * Optional case study ("story") for an experience entry. When present, the entry gets
+ * its own page at /trabajo/<slug> (es) and /en/work/<slug> (en), and the markdown body
+ * of the entry is rendered as the "Technical details" section.
+ * Role, location and period are taken from the experience entry itself.
+ */
+const story = z.object({
+  title: z.string(),
+  /** Business-language summary; also used as meta description. */
+  summary: z.string().max(200),
+  industry: z.string(),
+  stack: z.array(z.string()).min(1),
+  blocks: z
+    .array(
+      z.object({
+        /** Anchor id, unique within the story. */
+        id: z.string().regex(/^[a-z0-9-]+$/),
+        eyebrow: z.string(),
+        title: z.string(),
+        /** Plain text; separate paragraphs with a blank line. */
+        body: z.string(),
+        visual: z.enum(STORY_VISUALS),
+      }),
+    )
+    .min(1)
+    .refine((blocks) => new Set(blocks.map((b) => b.id)).size === blocks.length, {
+      message: 'Story block ids must be unique',
+    }),
+});
+
 const experience = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/experience' }),
   schema: z.object({
@@ -35,6 +68,7 @@ const experience = defineCollection({
     end: z.coerce.date().optional(),
     summary: z.string(),
     order: z.number().int(),
+    story: story.optional(),
   }),
 });
 

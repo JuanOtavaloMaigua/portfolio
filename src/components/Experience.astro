@@ -1,7 +1,7 @@
 ---
 import Section from '@/components/Section.astro';
-import { getExperience } from '@/lib/content';
-import { formatMonthYear, getDictionary, type Locale } from '@/i18n';
+import { entrySlug, getExperience } from '@/lib/content';
+import { formatMonthYear, getDictionary, localizePath, storyPaths, type Locale } from '@/i18n';
 
 interface Props {
   locale: Locale;
@@ -9,7 +9,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
-const entries = await getExperience(locale);
+const entries = (await getExperience(locale)).map((entry) => ({ data: entry.data, slug: entrySlug(entry) }));
 
 const toIso = (date: Date) => date.toISOString().slice(0, 7);
 ---
@@ -17,10 +17,13 @@ const toIso = (date: Date) => date.toISOString().slice(0, 7);
 <Section id="experience" eyebrow={t.experience.eyebrow} title={t.experience.title}>
   <ol class="relative space-y-8 border-l border-border pl-5 sm:border-l-0 sm:pl-0">
     {
-      entries.map(({ data }) => (
+      entries.map(({ data, slug }) => (
         <li class="relative sm:grid sm:grid-cols-[9.5rem_1fr] sm:gap-6">
           <span
-            class="absolute top-1.5 -left-[calc(1.25rem+5.5px)] size-2.5 rounded-full border-2 border-bg bg-border sm:hidden"
+            class:list={[
+              'absolute top-1.5 -left-[calc(1.25rem+5.5px)] size-2.5 rounded-full border-2 border-bg sm:hidden',
+              data.story ? 'bg-accent' : 'bg-border',
+            ]}
             aria-hidden="true"
           />
           <p class="font-mono text-xs leading-6 text-muted">
@@ -28,12 +31,33 @@ const toIso = (date: Date) => date.toISOString().slice(0, 7);
             {' – '}
             {data.end ? <time datetime={toIso(data.end)}>{formatMonthYear(data.end, locale)}</time> : t.experience.present}
           </p>
-          <div class="mt-1 sm:mt-0 sm:border-l sm:border-border sm:pl-6">
+          <div class:list={['mt-1 sm:mt-0', data.story ? 'story-entry' : 'sm:border-l sm:border-border sm:pl-6']}>
+            {data.story && <p class="story-badge">{t.experience.storyBadge}</p>}
             <h3 class="font-semibold text-fg">
               {data.company} <span class="font-normal text-muted">— {data.role}</span>
             </h3>
             <p class="font-mono text-xs text-muted">{data.location}</p>
             <p class="mt-2 text-sm leading-relaxed text-fg/90">{data.summary}</p>
+            {data.story && (
+              <a href={localizePath(locale, storyPaths(slug))} class="story-cta mt-4">
+                {t.experience.readStory}
+                <span class="sr-only">: {data.story.title}</span>
+                <svg
+                  class="story-cta-arrow"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </a>
+            )}
           </div>
         </li>
       ))

@@ -51,6 +51,8 @@ const es = {
     eyebrow: '02 · Experiencia',
     title: 'Experiencia',
     present: 'Presente',
+    readStory: 'Ver cómo lo construí',
+    storyBadge: 'Historia interactiva',
   },
   process: {
     eyebrow: '03 · Proceso',
@@ -110,6 +112,59 @@ const es = {
     title: 'Página no encontrada',
     text: 'La página que buscas no existe o fue movida.',
     back: 'Volver al inicio',
+  },
+  story: {
+    titleSuffix: 'Juan Otavalo',
+    back: 'Experiencia',
+    role: 'Rol',
+    location: 'Ubicación',
+    stack: 'Stack',
+    storyLabel: 'Historia',
+    technical: {
+      eyebrow: 'Para reclutadores',
+      title: 'Detalles técnicos',
+    },
+    cta: {
+      title: '¿Tu planta tiene un problema parecido?',
+      text: 'Si tus datos de producción viven en máquinas, hojas de papel o sistemas que no se hablan entre sí, conversemos.',
+      schedule: 'Agendar una llamada',
+      email: 'Escríbeme',
+      home: 'Volver al inicio',
+    },
+    visuals: {
+      machines: {
+        aria: 'Diagrama: cuatro máquinas con PLC (peletizadora, extrusora, evaporador y silo) generan datos que terminan en papel en lugar de llegar a quien decide.',
+        machines: ['Peletizadora', 'Extrusora', 'Evaporador', 'Silo'],
+        paper: 'Papel',
+      },
+      recipes: {
+        aria: 'Diagrama: una receta se descompone en materiales como maíz, cebada y soya, cada uno con su rendimiento; tres áreas colaboran: alimentos, automatización y software.',
+        recipe: 'Receta',
+        materials: ['Maíz', 'Cebada', 'Soya'],
+        people: ['Alimentos', 'Automatización', 'Software'],
+      },
+      pipeline: {
+        aria: 'Diagrama de la planta: peletizadora, extrusora, evaporador y silo envían datos a un servidor de PLC Siemens; los datos se guardan en Microsoft SQL Server, MongoDB y Redis, y llegan a un único computador de control.',
+        machines: 'Máquinas',
+        machineNames: ['Peletizadora', 'Extrusora', 'Evaporador', 'Silo'],
+        plc: 'Servidor PLC',
+        plcVendor: 'Siemens',
+        databases: ['SQL Server', 'MongoDB', 'Redis'],
+        computer: 'Computador de control',
+        computerSub: 'Flask · React',
+      },
+      command: {
+        aria: 'Diagrama de la sala de control: una pared de 6 pantallas que se encienden una a una, cada una con un gráfico distinto: líneas, barras, producido frente a pendiente, rendimiento, materiales y receta.',
+        screens: ['Rendimiento', 'Producción', 'Turno', 'Material', 'Silos', 'Receta'],
+        produced: 'Producido',
+        pending: 'Pendiente',
+      },
+      tenants: {
+        aria: 'Diagrama: plantas de alimento para pollos, cerdos, perros y caballos, cada una con sus recetas, conectadas a un mismo dashboard.',
+        plants: ['Pollos', 'Cerdos', 'Perros', 'Caballos'],
+        dashboard: 'Dashboard',
+      },
+    },
   },
 };
 

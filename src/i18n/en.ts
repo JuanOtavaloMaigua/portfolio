@@ -53,6 +53,8 @@ const en: Dictionary = {
     eyebrow: '02 · Experience',
     title: 'Experience',
     present: 'Present',
+    readStory: 'See how I built it',
+    storyBadge: 'Interactive story',
   },
   process: {
     eyebrow: '03 · Process',
@@ -112,6 +114,59 @@ const en: Dictionary = {
     title: 'Page not found',
     text: 'The page you are looking for does not exist or has moved.',
     back: 'Back to home',
+  },
+  story: {
+    titleSuffix: 'Juan Otavalo',
+    back: 'Experience',
+    role: 'Role',
+    location: 'Location',
+    stack: 'Stack',
+    storyLabel: 'Story',
+    technical: {
+      eyebrow: 'For recruiters',
+      title: 'Technical details',
+    },
+    cta: {
+      title: 'Does your plant have a similar problem?',
+      text: 'If your production data lives in machines, paper sheets or systems that do not talk to each other, let’s talk.',
+      schedule: 'Book a call',
+      email: 'Email me',
+      home: 'Back to home',
+    },
+    visuals: {
+      machines: {
+        aria: 'Diagram: four PLC-equipped machines (pellet mill, extruder, evaporator and silo) produce data that ends up on paper instead of reaching decision makers.',
+        machines: ['Pellet mill', 'Extruder', 'Evaporator', 'Silo'],
+        paper: 'Paper',
+      },
+      recipes: {
+        aria: 'Diagram: a recipe breaks down into materials such as corn, barley and soy, each with its own yield; three teams collaborate: food, automation and software.',
+        recipe: 'Recipe',
+        materials: ['Corn', 'Barley', 'Soy'],
+        people: ['Food', 'Automation', 'Software'],
+      },
+      pipeline: {
+        aria: 'Plant diagram: pellet mill, extruder, evaporator and silo send data to a Siemens PLC server; the data is stored in Microsoft SQL Server, MongoDB and Redis, and reaches one single control computer.',
+        machines: 'Machines',
+        machineNames: ['Pellet mill', 'Extruder', 'Evaporator', 'Silo'],
+        plc: 'PLC server',
+        plcVendor: 'Siemens',
+        databases: ['SQL Server', 'MongoDB', 'Redis'],
+        computer: 'Control computer',
+        computerSub: 'Flask · React',
+      },
+      command: {
+        aria: 'Control room diagram: a wall of 6 screens lighting up one by one, each with a different chart: lines, bars, produced versus pending, yield, materials and recipe.',
+        screens: ['Yield', 'Output', 'Shift', 'Material', 'Silos', 'Recipe'],
+        produced: 'Produced',
+        pending: 'Pending',
+      },
+      tenants: {
+        aria: 'Diagram: feed plants for poultry, pigs, dogs and horses, each with its own recipes, connected to one shared dashboard.',
+        plants: ['Poultry', 'Pigs', 'Dogs', 'Horses'],
+        dashboard: 'Dashboard',
+      },
+    },
   },
 };
 

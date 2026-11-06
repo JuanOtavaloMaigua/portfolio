@@ -1,9 +1,9 @@
 ---
-import { LOCALES, LOCALE_NAMES, LOCALE_TAGS, getDictionary, localizePath, type Locale } from '@/i18n';
+import { LOCALES, LOCALE_NAMES, LOCALE_TAGS, getDictionary, localizePath, type Locale, type LocalizedPath } from '@/i18n';
 
 interface Props {
   locale: Locale;
-  path?: string;
+  path?: LocalizedPath;
 }
 
 const { locale, path = '' } = Astro.props;

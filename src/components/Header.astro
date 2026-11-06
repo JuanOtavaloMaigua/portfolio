@@ -1,12 +1,12 @@
 ---
 import ThemeToggle from '@/components/ThemeToggle.astro';
 import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
-import { getDictionary, localizePath, type Locale } from '@/i18n';
+import { getDictionary, localizePath, type Locale, type LocalizedPath } from '@/i18n';
 import { SITE } from '@/config/site';
 
 interface Props {
   locale: Locale;
-  path?: string;
+  path?: LocalizedPath;
 }
 
 const { locale, path = '' } = Astro.props;

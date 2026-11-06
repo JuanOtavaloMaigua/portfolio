@@ -153,6 +153,159 @@
   .link:hover {
     text-decoration-color: var(--color-accent);
   }
+
+  /* Experience entry that links to an interactive story. Tints stay <= 6% so text keeps AA. */
+  .story-entry {
+    padding: 1rem 1rem 1rem 1.125rem;
+    border: 1px solid color-mix(in oklab, var(--color-accent) 22%, var(--color-border));
+    border-left: 2px solid var(--color-accent);
+    border-radius: 0.5rem;
+    background-color: color-mix(in oklab, var(--color-accent) 5%, var(--color-bg));
+  }
+
+  .story-badge {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .story-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: background-color 150ms ease;
+  }
+
+  .story-cta:hover,
+  .story-cta:focus-visible {
+    background-color: color-mix(in oklab, var(--color-accent) 10%, var(--color-bg));
+  }
+
+  .story-cta-arrow {
+    transition: transform 150ms ease;
+  }
+
+  .story-cta:hover .story-cta-arrow,
+  .story-cta:focus-visible .story-cta-arrow {
+    transform: translateX(3px);
+  }
+
+  /* Hero node network: decorative layer, never interactive. */
+  .hero-network {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    /* Mobile/tablet: top band to the right of the avatar. */
+    top: 0;
+    right: 0;
+    left: 6.5rem;
+    height: 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-network {
+      left: 8.5rem;
+      height: 6rem;
+    }
+  }
+
+  /* Desktop: a panel on the right that extends into the page margin. */
+  @media (min-width: 1024px) {
+    .hero-network {
+      left: auto;
+      right: -9rem;
+      width: 30rem;
+      height: 22rem;
+      opacity: 0.65;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .hero-network {
+      right: -14rem;
+      width: 34rem;
+    }
+  }
+
+  .hero-network > * {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-network canvas {
+    pointer-events: none;
+  }
+
+  .hero-network [data-network-canvas] {
+    opacity: 0;
+    transition: opacity 800ms ease;
+  }
+
+  .hero-network[data-ready] [data-network-canvas] {
+    opacity: 1;
+  }
+
+  .hero-network[data-ready] [data-network-poster] {
+    opacity: 0;
+    transition: opacity 800ms ease;
+  }
+
+  .net-edge,
+  .net-node,
+  .net-hub {
+    fill: none;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .net-edge {
+    stroke: var(--color-muted);
+    stroke-opacity: 0.28;
+    stroke-width: 1;
+  }
+
+  .net-node {
+    stroke: var(--color-muted);
+    stroke-opacity: 0.55;
+    stroke-width: 4px;
+  }
+
+  .net-hub {
+    stroke: var(--color-accent);
+    stroke-opacity: 0.85;
+    stroke-width: 7px;
+  }
+
+  /* Touch devices get the lighter 18-node graph; fine pointers get the full one. */
+  .net-fine {
+    display: none;
+  }
+
+  @media (pointer: fine) {
+    .net-fine {
+      display: inline;
+    }
+
+    .net-coarse {
+      display: none;
+    }
+  }
 }
 
 /* Scroll reveal: only hides content when JS is running and motion is allowed. */

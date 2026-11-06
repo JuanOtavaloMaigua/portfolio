@@ -30,13 +30,28 @@ export function getDictionary(locale: Locale): Dictionary {
 }
 
 /**
+ * A route without locale prefix. Use a per-locale record when the slug itself is
+ * translated, e.g. { es: "trabajo/caiheng", en: "work/caiheng" }.
+ */
+export type LocalizedPath = string | Record<Locale, string>;
+
+/**
  * Builds a locale-aware path. `path` is the route without locale prefix,
  * e.g. "" for home or "lab". The default locale is served without a prefix.
  */
-export function localizePath(locale: Locale, path = ''): string {
-  const clean = path.replace(/^\/+|\/+$/g, '');
+export function localizePath(locale: Locale, path: LocalizedPath = ''): string {
+  const route = typeof path === 'string' ? path : path[locale];
+  const clean = route.replace(/^\/+|\/+$/g, '');
   const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
   return clean ? `${prefix}/${clean}/` : `${prefix}/`;
+}
+
+/** Translated first segment of story (case study) routes: /trabajo/<slug> and /en/work/<slug>. */
+export const STORY_SEGMENTS: Record<Locale, string> = { es: 'trabajo', en: 'work' };
+
+/** Unprefixed story routes for every locale, for links, canonical and hreflang. */
+export function storyPaths(slug: string): Record<Locale, string> {
+  return { es: `${STORY_SEGMENTS.es}/${slug}`, en: `${STORY_SEGMENTS.en}/${slug}` };
 }
 
 export function otherLocale(locale: Locale): Locale {

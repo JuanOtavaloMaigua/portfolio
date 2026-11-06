@@ -1,18 +1,21 @@
 ---
 import { SITE } from '@/config/site';
-import { LOCALES, LOCALE_TAGS, DEFAULT_LOCALE, localizePath, type Locale } from '@/i18n';
+import { LOCALES, LOCALE_TAGS, DEFAULT_LOCALE, localizePath, type Locale, type LocalizedPath } from '@/i18n';
 
 interface Props {
   title: string;
   description: string;
   locale: Locale;
-  /** Route without locale prefix, e.g. "" or "lab". */
-  path?: string;
+  /** Route without locale prefix, e.g. "" or "lab", or a per-locale record for translated slugs. */
+  path?: LocalizedPath;
   /** Absolute or root-relative image path. */
   image?: string;
   /** Set false for pages that only exist in one locale (e.g. 404). */
   alternates?: boolean;
   noindex?: boolean;
+  ogType?: 'website' | 'article';
+  /** Extra JSON-LD object rendered after the Person schema (e.g. an Article). */
+  jsonLd?: Record<string, unknown> | undefined;
 }
 
 const {
@@ -23,6 +26,8 @@ const {
   image = SITE.ogImage,
   alternates = true,
   noindex = false,
+  ogType = 'website',
+  jsonLd,
 } = Astro.props;
 
 const site = Astro.site ?? new URL(SITE.url);
@@ -65,7 +70,7 @@ const personJsonLd = {
   )
 }
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
@@ -83,3 +88,4 @@ const personJsonLd = {
 <meta name="twitter:image" content={imageUrl} />
 
 <script type="application/ld+json" is:inline set:html={JSON.stringify(personJsonLd)} />
+{jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}

@@ -13,3 +13,20 @@ export async function getExperience(locale: Locale): Promise<CollectionEntry<'ex
   const entries = await getCollection('experience', byLocale(locale));
   return entries.sort((a, b) => a.data.order - b.data.order);
 }
+
+/** "es/caiheng" -> "caiheng". The slug is shared by both locales. */
+export function entrySlug(entry: { id: string }): string {
+  return entry.id.slice(entry.id.indexOf('/') + 1);
+}
+
+export type StoryEntry = CollectionEntry<'experience'> & {
+  data: CollectionEntry<'experience'>['data'] & { story: NonNullable<CollectionEntry<'experience'>['data']['story']> };
+};
+
+const hasStory = (entry: CollectionEntry<'experience'>): entry is StoryEntry => entry.data.story !== undefined;
+
+/** Experience entries that have a story (case study) page in the given locale. */
+export async function getStories(locale: Locale): Promise<StoryEntry[]> {
+  const entries = await getExperience(locale);
+  return entries.filter(hasStory);
+}
