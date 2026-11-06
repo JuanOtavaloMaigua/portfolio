@@ -27,20 +27,6 @@ function setupThemeToggle(): void {
     }),
   );
 
-  // Follow system changes only while the user has not chosen explicitly.
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-    let stored: string | null = null;
-    try {
-      stored = localStorage.getItem('theme');
-    } catch {
-      stored = null;
-    }
-    if (stored !== 'light' && stored !== 'dark') {
-      root.setAttribute('data-theme', event.matches ? 'dark' : 'light');
-      sync();
-    }
-  });
-
   sync();
 }
 

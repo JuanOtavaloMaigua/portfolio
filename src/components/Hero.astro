@@ -1,7 +1,6 @@
 ---
 import IndustryNetwork from '@/components/hero/IndustryNetwork';
 import { INDUSTRIES, INDUSTRY_STORIES, STACKS, TECHS, type IndustryId } from '@/data/network';
-import { SITE } from '@/config/site';
 import { getDictionary, localizePath, storyPaths, type Locale } from '@/i18n';
 
 interface Props {
@@ -29,14 +28,13 @@ const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
 
     <p class="hero-halo mt-5 font-mono text-xs leading-relaxed text-muted sm:text-sm">{t.hero.tagline}</p>
 
-    <div class="mt-8 flex flex-col items-start gap-3 sm:flex-row">
-      <a href={SITE.calUrl} class="btn btn-primary" target="_blank" rel="noopener">
-        {t.hero.ctaPrimary}
+    <div class="mt-8 flex">
+      <a href="#contact" class="btn btn-primary">
+        {t.hero.cta}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h14M13 6l6 6-6 6"></path>
         </svg>
       </a>
-      <a href={`mailto:${SITE.email}`} class="btn btn-secondary bg-bg">{t.hero.ctaSecondary}</a>
     </div>
   </div>
 

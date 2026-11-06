@@ -27,9 +27,8 @@ const en: Dictionary = {
   },
   hero: {
     title: 'I build the software that keeps industries moving.',
-    tagline: 'Full Stack Engineer · Ecuador · Django · React · TypeScript',
-    ctaPrimary: 'Book a call',
-    ctaSecondary: 'Email me',
+    tagline: 'Full Stack Engineer',
+    cta: "Let's talk",
     network: {
       aria: 'Network of the industries and technologies I have built software with',
       listTitle: 'Industries and technologies',

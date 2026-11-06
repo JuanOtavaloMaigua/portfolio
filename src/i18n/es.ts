@@ -25,9 +25,8 @@ const es = {
   },
   hero: {
     title: 'Construyo el software que mueve industrias.',
-    tagline: 'Full Stack Engineer · Ecuador · Django · React · TypeScript',
-    ctaPrimary: 'Agendar una llamada',
-    ctaSecondary: 'Escríbeme',
+    tagline: 'Full Stack Engineer',
+    cta: 'Hablemos',
     network: {
       aria: 'Red de industrias y tecnologías con las que he construido software',
       listTitle: 'Industrias y tecnologías',
