@@ -76,7 +76,7 @@ export interface NetworkLayout {
  * starting at --copy-top viewBox units from the top (set per breakpoint in global.css). Each layout keeps every
  * label out of the area the copy covers at the narrowest width it serves (where the copy is tallest
  * relative to the drawing); only edges and pulses run behind the text.
- * Phones (< 640px) get the project hub instead (HUBS / HUB_LAYOUT below).
+ * Phones (< 640px) get the product network instead (PRODUCT_LINKS / PRODUCT_LAYOUT below).
  */
 
 /** Tablets (640-1023px): the width of the 720px content column, 592-672px rendered. */
@@ -151,50 +151,55 @@ export const NETWORK_LAYOUTS = { tablet, desktop } as const;
 export type LayoutKey = keyof typeof NETWORK_LAYOUTS;
 
 /*
- * Phones (< 640px): one project at a time as a hub, with its technologies radiating from it.
- * Project names and industry eyebrows are translated in src/i18n (hero.network.hubs).
+ * Phones (< 640px): the products and solutions I have built, all at once, linked where they work together.
+ * Names and one-line descriptions are translated in src/i18n (hero.network.products).
  */
 
-export const HUB_IDS = ['textileErp', 'scada', 'esign', 'forecasting', 'aiAgent'] as const;
-export type HubId = (typeof HUB_IDS)[number];
+export const PRODUCT_IDS = ['erp', 'textile', 'rfid', 'dashboards', 'forecasting', 'ai', 'crm', 'apps', 'esign', 'infra'] as const;
+export type ProductId = (typeof PRODUCT_IDS)[number];
 
-export interface Hub {
-  id: HubId;
-  industry: IndustryId;
-  techs: readonly TechId[];
-}
-
-export const HUBS: readonly Hub[] = [
-  { id: 'textileErp', industry: 'textile', techs: ['django', 'react', 'postgres', 'rfid'] },
-  { id: 'scada', industry: 'food', techs: ['plc', 'flask', 'mongo', 'sqlserver', 'redis', 'react'] },
-  { id: 'esign', industry: 'finance', techs: ['nest', 'rn'] },
-  { id: 'forecasting', industry: 'retail', techs: ['django', 'postgres', 'prophet', 'vertex'] },
-  { id: 'aiAgent', industry: 'ai', techs: ['python', 'postgres'] },
+/** Products that work together. Undirected; each pair is one edge. */
+export const PRODUCT_LINKS: readonly (readonly [ProductId, ProductId])[] = [
+  ['erp', 'textile'],
+  ['erp', 'rfid'],
+  ['textile', 'rfid'],
+  ['erp', 'ai'],
+  ['erp', 'crm'],
+  ['erp', 'infra'],
+  ['dashboards', 'forecasting'],
+  ['dashboards', 'infra'],
+  ['forecasting', 'ai'],
+  ['ai', 'crm'],
+  ['crm', 'apps'],
+  ['apps', 'esign'],
 ];
 
-/** Drawn 1:1 at 328px wide (a 360px screen minus gutters), up to 420px. Font sizes in viewBox units. */
-export const HUB_LAYOUT = {
-  width: 328,
-  height: 290,
-  cx: 164,
-  cy: 145,
-  /** Ellipse the technology pills sit on. */
-  rx: 116,
-  ry: 128,
-  nameFont: 14.5,
-  eyebrowFont: 11,
-  techFont: 11.5,
-} as const;
+/** Products directly linked to one product. */
+export function productNeighbors(id: ProductId): ProductId[] {
+  return PRODUCT_LINKS.flatMap(([a, b]) => (a === id ? [b] : b === id ? [a] : []));
+}
+
+/** Story (case study) slug per product, when one exists. */
+export const PRODUCT_STORIES: Partial<Record<ProductId, string>> = { dashboards: 'caiheng' };
 
 /**
- * Technology positions around the hub: evenly spaced, starting at the top. Four techs sit on the diagonals
- * so none lands level with the (wide) hub.
+ * Pill centers in viewBox units, drawn 1:1 at 328px wide (a 360px screen minus gutters) and up to 420px.
+ * Hand-tuned so no pill overlaps another and no link runs under a pill it does not connect, for the longest
+ * label in either locale.
  */
-export function hubPoints(count: number): Point[] {
-  const { cx, cy, rx, ry } = HUB_LAYOUT;
-  const start = -Math.PI / 2 + (count % 4 === 0 ? Math.PI / count : 0);
-  return Array.from({ length: count }, (_, i) => {
-    const angle = start + (i * 2 * Math.PI) / count;
-    return { x: Math.round(cx + rx * Math.cos(angle)), y: Math.round(cy + ry * Math.sin(angle)) };
-  });
-}
+export const PRODUCT_LAYOUT: { width: number; height: number; nodes: Record<ProductId, Point> } = {
+  width: 328,
+  height: 304,
+  nodes: {
+    erp: { x: 171, y: 122 },
+    textile: { x: 138, y: 13 },
+    rfid: { x: 74, y: 65 },
+    dashboards: { x: 243, y: 178 },
+    forecasting: { x: 253, y: 237 },
+    ai: { x: 52, y: 168 },
+    crm: { x: 73, y: 237 },
+    apps: { x: 110, y: 290 },
+    esign: { x: 262, y: 289 },
+    infra: { x: 248, y: 65 },
+  },
+};

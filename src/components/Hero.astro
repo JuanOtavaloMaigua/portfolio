@@ -1,7 +1,16 @@
 ---
 import IndustryNetwork from '@/components/hero/IndustryNetwork';
-import MobileHubNetwork from '@/components/hero/MobileHubNetwork';
-import { HUBS, INDUSTRY_STORIES, TECHS, type IndustryId } from '@/data/network';
+import MobileProductNetwork from '@/components/hero/MobileProductNetwork';
+import {
+  INDUSTRIES,
+  INDUSTRY_STORIES,
+  PRODUCT_IDS,
+  PRODUCT_STORIES,
+  STACKS,
+  TECHS,
+  type IndustryId,
+  type ProductId,
+} from '@/data/network';
 import { getDictionary, localizePath, storyPaths, type Locale } from '@/i18n';
 
 interface Props {
@@ -11,13 +20,17 @@ interface Props {
 const { locale } = Astro.props;
 const t = getDictionary(locale);
 const network = t.hero.network;
+const storyHref = (slug: string) => localizePath(locale, storyPaths(slug));
 const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
-  Object.entries(INDUSTRY_STORIES).map(([industry, slug]) => [industry, localizePath(locale, storyPaths(slug))]),
+  Object.entries(INDUSTRY_STORIES).map(([industry, slug]) => [industry, storyHref(slug)]),
+);
+const productStoryHrefs: Partial<Record<ProductId, string>> = Object.fromEntries(
+  Object.entries(PRODUCT_STORIES).map(([product, slug]) => [product, storyHref(slug)]),
 );
 ---
 
 <!--
-  Phones (< 640px): the copy, then the project hub below it (MobileHubNetwork), in normal flow.
+  Phones (< 640px): the copy, then the product network below it (MobileProductNetwork), in normal flow.
   From 640px: the industry network is the hero background: it sits in normal flow (so it sizes the hero with
   no layout shift) and the copy is stacked on top of it in the same grid cell. The copy lets taps through to
   the network, except on its links. network.ts keeps labels out of the area the copy covers.
@@ -41,8 +54,8 @@ const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
     </div>
   </div>
 
-  <div class="hero-hub">
-    <MobileHubNetwork client:visible={{ rootMargin: '200px' }} labels={network} storyHrefs={storyHrefs} />
+  <div class="hero-products">
+    <MobileProductNetwork client:visible={{ rootMargin: '200px' }} labels={network} storyHrefs={productStoryHrefs} />
   </div>
 
   <div class="hero-net">
@@ -50,12 +63,22 @@ const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
   </div>
 
   <div class="sr-only">
+    <p>{network.productsTitle}</p>
+    <ul>
+      {
+        PRODUCT_IDS.map((product) => (
+          <li>
+            {network.products[product].name}: {network.products[product].description}
+          </li>
+        ))
+      }
+    </ul>
     <p>{network.listTitle}</p>
     <ul>
       {
-        HUBS.map((hub) => (
+        INDUSTRIES.map((industry) => (
           <li>
-            {network.hubs[hub.id].name} ({network.industries[hub.industry]}): {hub.techs.map((tech) => TECHS[tech]).join(', ')}
+            {network.industries[industry]}: {STACKS[industry].map((tech) => TECHS[tech]).join(', ')}
           </li>
         ))
       }

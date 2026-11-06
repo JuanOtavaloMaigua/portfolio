@@ -35,15 +35,51 @@ const en: Dictionary = {
       summary: 'One engineer, five industries connected by the same technologies.',
       hint: 'Pick an industry or technology to see its connections.',
       storyLink: 'Read the story',
-      hubsLabel: 'Projects',
-      hubAria: 'Project {n} of {total}: {name}',
-      nextHub: 'Next project',
-      hubs: {
-        textileErp: { name: 'Textile ERP with RFID', industry: 'Textile' },
-        scada: { name: 'SCADA dashboard', industry: 'Food manufacturing' },
-        esign: { name: 'Stock-purchase e-signature', industry: 'Finance' },
-        forecasting: { name: 'Sales forecasting', industry: 'Retail' },
-        aiAgent: { name: 'AI reporting agent', industry: 'AI' },
+      productsAria: 'Products and solutions I have built, and how they connect',
+      productsTitle: 'Products and solutions',
+      productsSummary: 'Products I have built and how they connect.',
+      productsHint: 'Tap a product to see how it connects',
+      products: {
+        erp: {
+          name: 'Custom ERP',
+          description: 'Inventory, production and sales in one multi-tenant system shared by several textile companies.',
+        },
+        textile: {
+          name: 'Textile software',
+          description: 'The ERP of a textile manufacturer: inventory, production and labeling of every garment.',
+        },
+        rfid: {
+          name: 'RFID traceability',
+          description: 'RFID labeling with Zebra printers that cut container unloading time in half.',
+        },
+        dashboards: {
+          name: 'Industrial dashboards',
+          description: 'Live PLC/SCADA data for animal-feed plants, with a 6-screen control room.',
+        },
+        forecasting: {
+          name: 'Sales forecasting',
+          description: 'Demand forecasting models (Prophet, Darts, N-BEATS) to cut inventory costs.',
+        },
+        ai: {
+          name: 'AI agents',
+          description: 'An agent that answers natural-language questions about ERP data.',
+        },
+        crm: {
+          name: 'Omnichannel CRM',
+          description: 'WhatsApp, Facebook and Instagram in a single inbox, built on Chatwoot and the WhatsApp Cloud API.',
+        },
+        apps: {
+          name: 'Mobile apps',
+          description: 'A React Native app for the Stock Exchange, tied into the stock-purchase flow.',
+        },
+        esign: {
+          name: 'E-signature',
+          description: 'Electronic signature built into the Stock Exchange stock-purchase flow.',
+        },
+        infra: {
+          name: 'Cloud infrastructure',
+          description: 'Hetzner, Coolify, GitHub Actions, R2 backups and Sentry: cheaper than managed cloud.',
+        },
       },
       industries: {
         food: 'Food manufacturing',

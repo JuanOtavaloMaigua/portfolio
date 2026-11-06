@@ -33,15 +33,51 @@ const es = {
       summary: 'Un ingeniero, cinco industrias conectadas por las mismas tecnologías.',
       hint: 'Elige una industria o tecnología para ver sus conexiones.',
       storyLink: 'Ver historia',
-      hubsLabel: 'Proyectos',
-      hubAria: 'Proyecto {n} de {total}: {name}',
-      nextHub: 'Siguiente proyecto',
-      hubs: {
-        textileErp: { name: 'ERP textil con RFID', industry: 'Textil' },
-        scada: { name: 'Dashboard SCADA', industry: 'Alimentos' },
-        esign: { name: 'Firma electrónica bursátil', industry: 'Finanzas' },
-        forecasting: { name: 'Forecasting de ventas', industry: 'Retail' },
-        aiAgent: { name: 'Agente de IA para reportes', industry: 'IA' },
+      productsAria: 'Productos y soluciones que he construido, conectados entre sí',
+      productsTitle: 'Productos y soluciones',
+      productsSummary: 'Productos que he construido y cómo se conectan entre sí.',
+      productsHint: 'Toca un producto para ver cómo se conecta',
+      products: {
+        erp: {
+          name: 'ERP a medida',
+          description: 'Inventario, producción y ventas en un solo sistema, multiempresa para varias textileras.',
+        },
+        textile: {
+          name: 'Software textil',
+          description: 'El ERP de un fabricante textil: inventario, producción y etiquetado de cada prenda.',
+        },
+        rfid: {
+          name: 'Trazabilidad RFID',
+          description: 'Etiquetado RFID con impresoras Zebra: descargar un contenedor ahora toma la mitad del tiempo.',
+        },
+        dashboards: {
+          name: 'Dashboards industriales',
+          description: 'PLC/SCADA en vivo para plantas de balanceado, con una sala de control de 6 pantallas.',
+        },
+        forecasting: {
+          name: 'Forecasting de ventas',
+          description: 'Modelos que pronostican la demanda (Prophet, Darts, N-BEATS) para bajar costos de inventario.',
+        },
+        ai: {
+          name: 'Agentes de IA',
+          description: 'Un agente que responde preguntas en lenguaje natural sobre los datos del ERP.',
+        },
+        crm: {
+          name: 'CRM omnicanal',
+          description: 'WhatsApp, Facebook e Instagram en una sola bandeja, sobre Chatwoot y WhatsApp Cloud API.',
+        },
+        apps: {
+          name: 'Apps móviles',
+          description: 'App en React Native para la Bolsa de Valores, conectada al flujo de compra de acciones.',
+        },
+        esign: {
+          name: 'Firma electrónica',
+          description: 'Firma electrónica integrada en el flujo de compra de acciones de la Bolsa de Valores.',
+        },
+        infra: {
+          name: 'Infraestructura cloud',
+          description: 'Hetzner, Coolify, GitHub Actions, backups en R2 y Sentry: más barato que la nube gestionada.',
+        },
       },
       industries: {
         food: 'Alimentos',

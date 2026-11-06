@@ -35,7 +35,7 @@ type Selection = { kind: 'industry'; id: IndustryId } | { kind: 'tech'; id: Tech
  */
 type Phase = 'static' | 'hidden' | 'assemble' | 'trace' | 'live';
 
-/** Tablet and desktop only; phones (< 640px) get MobileHubNetwork instead (see Hero.astro). */
+/** Tablet and desktop only; phones (< 640px) get MobileProductNetwork instead (see Hero.astro). */
 const LAYOUT_KEYS: readonly LayoutKey[] = ['tablet', 'desktop'];
 /** Must match the breakpoint that swaps .net-tablet for .net-desktop in global.css. */
 const DESKTOP_QUERY = '(min-width: 1024px)';
