@@ -1,9 +1,8 @@
 ---
-import { Image } from 'astro:assets';
-import avatar from '@/assets/avatar.jpg';
-import HeroNetworkPoster from '@/components/hero/HeroNetworkPoster.astro';
+import IndustryNetwork from '@/components/hero/IndustryNetwork';
+import { INDUSTRIES, INDUSTRY_STORIES, STACKS, TECHS, type IndustryId } from '@/data/network';
 import { SITE } from '@/config/site';
-import { getDictionary, type Locale } from '@/i18n';
+import { getDictionary, localizePath, storyPaths, type Locale } from '@/i18n';
 
 interface Props {
   locale: Locale;
@@ -11,119 +10,50 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
+const network = t.hero.network;
+const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
+  Object.entries(INDUSTRY_STORIES).map(([industry, slug]) => [industry, localizePath(locale, storyPaths(slug))]),
+);
 ---
 
-<section class="overflow-x-clip" aria-labelledby="hero-title" data-hero>
-  <div class="container-page pt-12 pb-16 sm:pt-20 sm:pb-20">
-    <div class="relative isolate">
-      <div class="hero-network" data-hero-network aria-hidden="true">
-        <HeroNetworkPoster />
-      </div>
+<!--
+  The network is the hero background: it sits in normal flow (so it sizes the hero with no layout shift)
+  and the copy is stacked on top of it in the same grid cell. The copy lets taps through to the network,
+  except on its links. network.ts keeps labels out of the area the copy covers.
+-->
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="hero-copy container-page">
+    <h1 id="hero-title" class="hero-halo text-4xl leading-[1.1] font-semibold tracking-tight text-balance text-fg sm:text-5xl">
+      {t.hero.title}
+    </h1>
 
-      <Image
-        src={avatar}
-        alt={t.a11y.avatarAlt}
-        width={96}
-        height={96}
-        densities={[1, 2]}
-        loading="eager"
-        fetchpriority="high"
-        class="size-20 rounded-full border border-border object-cover sm:size-24"
-      />
+    <p class="hero-halo mt-5 font-mono text-xs leading-relaxed text-muted sm:text-sm">{t.hero.tagline}</p>
 
-      <p class="mt-8 inline-flex items-center gap-2.5 font-mono text-xs text-muted">
-        <span class="pulse-dot relative inline-block size-2 rounded-full bg-success" aria-hidden="true"></span>
-        {t.hero.availability}
-      </p>
-
-      <h1 id="hero-title" class="mt-4 text-4xl leading-[1.1] font-semibold tracking-tight text-balance text-fg sm:text-5xl">
-        {t.hero.title}
-      </h1>
-
-      <p class="mt-5 max-w-[60ch] text-lg leading-relaxed text-muted text-pretty">
-        {t.hero.subtitle}
-      </p>
-
-      <p class="mt-5 font-mono text-xs leading-relaxed text-muted sm:text-sm">{t.hero.tagline}</p>
-
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href={SITE.calUrl} class="btn btn-primary" target="_blank" rel="noopener">
-          {t.hero.ctaPrimary}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6"></path>
-          </svg>
-        </a>
-        <a href={`mailto:${SITE.email}`} class="btn btn-secondary">{t.hero.ctaSecondary}</a>
-      </div>
+    <div class="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+      <a href={SITE.calUrl} class="btn btn-primary" target="_blank" rel="noopener">
+        {t.hero.ctaPrimary}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6"></path>
+        </svg>
+      </a>
+      <a href={`mailto:${SITE.email}`} class="btn btn-secondary bg-bg">{t.hero.ctaSecondary}</a>
     </div>
   </div>
+
+  <div class="hero-net">
+    <IndustryNetwork client:visible={{ rootMargin: '200px' }} labels={network} storyHrefs={storyHrefs} />
+  </div>
+
+  <div class="sr-only">
+    <p>{network.listTitle}</p>
+    <ul>
+      {
+        INDUSTRIES.map((industry) => (
+          <li>
+            {network.industries[industry]}: {STACKS[industry].map((tech) => TECHS[tech]).join(', ')}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>
-
-<script>
-  /*
-   * Progressive enhancement for the hero network. The SVG poster is the baseline; WebGL loads only
-   * when the device can afford it, and only after the page is idle (desktop) or after the first
-   * user interaction (touch), so React + three never compete with the LCP or main-thread budget.
-   */
-  interface NetworkInformationLike {
-    saveData?: boolean;
-  }
-  interface NavigatorHints {
-    connection?: NetworkInformationLike;
-    deviceMemory?: number;
-  }
-
-  function canAnimate(): boolean {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-    const hints = navigator as Navigator & NavigatorHints;
-    if (hints.connection?.saveData === true) return false;
-    if (typeof hints.deviceMemory === 'number' && hints.deviceMemory <= 2) return false;
-    return true;
-  }
-
-  function hasWebGL(): boolean {
-    try {
-      const probe = document.createElement('canvas');
-      const gl = probe.getContext('webgl2') ?? probe.getContext('webgl');
-      gl?.getExtension('WEBGL_lose_context')?.loseContext();
-      return gl !== null;
-    } catch {
-      return false;
-    }
-  }
-
-  function whenIdle(callback: () => void): void {
-    if ('requestIdleCallback' in window) window.requestIdleCallback(callback, { timeout: 2000 });
-    else setTimeout(callback, 300);
-  }
-
-  function afterLoad(callback: () => void): void {
-    if (document.readyState === 'complete') callback();
-    else window.addEventListener('load', callback, { once: true });
-  }
-
-  function onFirstInteraction(callback: () => void): void {
-    const events = ['scroll', 'pointerdown', 'touchstart', 'keydown'] as const;
-    const run = () => {
-      events.forEach((name) => window.removeEventListener(name, run));
-      callback();
-    };
-    events.forEach((name) => window.addEventListener(name, run, { passive: true, once: true }));
-  }
-
-  const host = document.querySelector<HTMLElement>('[data-hero-network]');
-
-  if (host && canAnimate()) {
-    const coarse = !window.matchMedia('(pointer: fine)').matches;
-    const load = () =>
-      whenIdle(() => {
-        if (!hasWebGL()) return;
-        import('@/components/hero/mountHeroNetwork')
-          .then(({ mountHeroNetwork }) => mountHeroNetwork(host, coarse))
-          .catch(() => {
-            // The static poster stays in place; nothing else to do.
-          });
-      });
-    afterLoad(() => (coarse ? onFirstInteraction(load) : load()));
-  }
-</script>

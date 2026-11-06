@@ -30,10 +30,5 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
-    build: {
-      // The only chunk above Vite's 500 kB default is the hero WebGL network (three + R3F),
-      // which is dynamic-imported after idle/first interaction and never on the critical path.
-      chunkSizeWarningLimit: 1000,
-    },
   },
 });

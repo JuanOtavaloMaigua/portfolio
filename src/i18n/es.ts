@@ -16,7 +16,6 @@ const es = {
     closeMenu: 'Cerrar menú',
     toggleTheme: 'Cambiar entre tema claro y oscuro',
     language: 'Idioma',
-    avatarAlt: 'Foto de Juan Otavalo',
     home: 'Juan Otavalo, inicio',
   },
   nav: {
@@ -26,12 +25,23 @@ const es = {
   },
   hero: {
     title: 'Construyo el software que mueve industrias.',
-    subtitle:
-      'ERPs a medida, trazabilidad RFID, datos industriales y agentes de IA para empresas en Ecuador y el mundo.',
     tagline: 'Full Stack Engineer · Ecuador · Django · React · TypeScript',
     ctaPrimary: 'Agendar una llamada',
     ctaSecondary: 'Escríbeme',
-    availability: 'Disponible para nuevos proyectos',
+    network: {
+      aria: 'Red de industrias y tecnologías con las que he construido software',
+      listTitle: 'Industrias y tecnologías',
+      summary: 'Un ingeniero, cinco industrias conectadas por las mismas tecnologías.',
+      hint: 'Elige una industria o tecnología para ver sus conexiones.',
+      storyLink: 'Ver historia',
+      industries: {
+        food: 'Alimentos',
+        textile: 'Textil',
+        retail: 'Retail (pronósticos)',
+        ai: 'IA',
+        finance: 'Finanzas',
+      },
+    },
   },
   projects: {
     eyebrow: '01 · Proyectos',

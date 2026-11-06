@@ -18,7 +18,6 @@ const en: Dictionary = {
     closeMenu: 'Close menu',
     toggleTheme: 'Toggle light and dark theme',
     language: 'Language',
-    avatarAlt: 'Photo of Juan Otavalo',
     home: 'Juan Otavalo, home',
   },
   nav: {
@@ -28,12 +27,23 @@ const en: Dictionary = {
   },
   hero: {
     title: 'I build the software that keeps industries moving.',
-    subtitle:
-      'Custom ERPs, RFID traceability, industrial data and AI agents for companies in Ecuador and around the world.',
     tagline: 'Full Stack Engineer · Ecuador · Django · React · TypeScript',
     ctaPrimary: 'Book a call',
     ctaSecondary: 'Email me',
-    availability: 'Available for new projects',
+    network: {
+      aria: 'Network of the industries and technologies I have built software with',
+      listTitle: 'Industries and technologies',
+      summary: 'One engineer, five industries connected by the same technologies.',
+      hint: 'Pick an industry or technology to see its connections.',
+      storyLink: 'Read the story',
+      industries: {
+        food: 'Food manufacturing',
+        textile: 'Textile',
+        retail: 'Retail (forecasting)',
+        ai: 'AI',
+        finance: 'Finance',
+      },
+    },
   },
   projects: {
     eyebrow: '01 · Projects',
