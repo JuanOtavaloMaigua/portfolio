@@ -35,9 +35,9 @@ type Selection = { kind: 'industry'; id: IndustryId } | { kind: 'tech'; id: Tech
  */
 type Phase = 'static' | 'hidden' | 'assemble' | 'trace' | 'live';
 
-const LAYOUT_KEYS: readonly LayoutKey[] = ['mobile', 'tablet', 'desktop'];
-/** Must match the breakpoints that show .net-tablet / .net-desktop in global.css. */
-const TABLET_QUERY = '(min-width: 640px)';
+/** Tablet and desktop only; phones (< 640px) get MobileHubNetwork instead (see Hero.astro). */
+const LAYOUT_KEYS: readonly LayoutKey[] = ['tablet', 'desktop'];
+/** Must match the breakpoint that swaps .net-tablet for .net-desktop in global.css. */
 const DESKTOP_QUERY = '(min-width: 1024px)';
 const ASSEMBLE_MS = 1300;
 const TRACE_MS = 1500;
@@ -110,7 +110,7 @@ function highlight(selection: Selection) {
 
 export default function IndustryNetwork({ labels, storyHrefs }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const refs = useRef<Record<LayoutKey, Refs>>({ mobile: emptyRefs(), tablet: emptyRefs(), desktop: emptyRefs() });
+  const refs = useRef<Record<LayoutKey, Refs>>({ tablet: emptyRefs(), desktop: emptyRefs() });
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>('static');
   const [pinned, setPinned] = useState<Selection>(null);
@@ -161,13 +161,12 @@ export default function IndustryNetwork({ labels, storyHrefs }: Props) {
     const root = rootRef.current;
     if (!animating || !root) return;
 
-    const tabletQuery = window.matchMedia(TABLET_QUERY);
     const desktopQuery = window.matchMedia(DESKTOP_QUERY);
     const keys = new Map<LayoutKey, string[]>(
       LAYOUT_KEYS.map((layoutKey) => [layoutKey, [...refs.current[layoutKey].nodes.keys()]]),
     );
     const params = new Map<string, ReturnType<typeof floatParams>>();
-    [...(keys.get('mobile') ?? [])].forEach((key, i) => params.set(key, floatParams(i + 1)));
+    [...(keys.get('tablet') ?? [])].forEach((key, i) => params.set(key, floatParams(i + 1)));
 
     interface Pulse {
       edge: number;
@@ -188,7 +187,7 @@ export default function IndustryNetwork({ labels, storyHrefs }: Props) {
     const frame = (now: number) => {
       raf = 0;
       if (!visible || document.hidden) return;
-      const layoutKey: LayoutKey = desktopQuery.matches ? 'desktop' : tabletQuery.matches ? 'tablet' : 'mobile';
+      const layoutKey: LayoutKey = desktopQuery.matches ? 'desktop' : 'tablet';
       const layout = NETWORK_LAYOUTS[layoutKey];
       const store = refs.current[layoutKey];
       const ramp = Math.min(1, (now - start) / 1500);

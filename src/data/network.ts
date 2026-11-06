@@ -72,45 +72,12 @@ export interface NetworkLayout {
 }
 
 /*
- * The network is the hero background and the hero copy (title, tagline, buttons) is drawn over it,
+ * From 640px up the network is the hero background and the hero copy (title, tagline, buttons) is drawn over it,
  * starting at --copy-top viewBox units from the top (set per breakpoint in global.css). Each layout keeps every
  * label out of the area the copy covers at the narrowest width it serves (where the copy is tallest
  * relative to the drawing); only edges and pulses run behind the text.
+ * Phones (< 640px) get the project hub instead (HUBS / HUB_LAYOUT below).
  */
-
-/** Phones (< 640px): drawn 1:1 at 328px wide (a 360px screen minus gutters), up to 420px. */
-const mobile: NetworkLayout = {
-  width: 328,
-  height: 584,
-  industryFont: 12.5,
-  techFont: 11,
-  industries: {
-    food: { x: 200, y: 332 },
-    textile: { x: 90, y: 436 },
-    retail: { x: 236, y: 436 },
-    ai: { x: 110, y: 530 },
-    finance: { x: 250, y: 530 },
-  },
-  techs: {
-    // Above the title: their edges to food run behind the copy.
-    plc: { x: 12, y: 16, label: 'right' },
-    flask: { x: 122, y: 16, label: 'right' },
-    mongo: { x: 222, y: 16, label: 'right' },
-    // Beside the buttons.
-    redis: { x: 296, y: 268, label: 'left' },
-    sqlserver: { x: 296, y: 298, label: 'left' },
-    // Below the copy.
-    react: { x: 20, y: 392, label: 'right' },
-    rfid: { x: 104, y: 392, label: 'right' },
-    django: { x: 186, y: 392, label: 'right' },
-    prophet: { x: 262, y: 392, label: 'right' },
-    postgres: { x: 150, y: 484, label: 'left' },
-    vertex: { x: 300, y: 484, label: 'left' },
-    python: { x: 40, y: 572, label: 'right' },
-    nest: { x: 200, y: 572, label: 'left' },
-    rn: { x: 300, y: 572, label: 'left' },
-  },
-};
 
 /** Tablets (640-1023px): the width of the 720px content column, 592-672px rendered. */
 const tablet: NetworkLayout = {
@@ -180,5 +147,54 @@ const desktop: NetworkLayout = {
   },
 };
 
-export const NETWORK_LAYOUTS = { mobile, tablet, desktop } as const;
+export const NETWORK_LAYOUTS = { tablet, desktop } as const;
 export type LayoutKey = keyof typeof NETWORK_LAYOUTS;
+
+/*
+ * Phones (< 640px): one project at a time as a hub, with its technologies radiating from it.
+ * Project names and industry eyebrows are translated in src/i18n (hero.network.hubs).
+ */
+
+export const HUB_IDS = ['textileErp', 'scada', 'esign', 'forecasting', 'aiAgent'] as const;
+export type HubId = (typeof HUB_IDS)[number];
+
+export interface Hub {
+  id: HubId;
+  industry: IndustryId;
+  techs: readonly TechId[];
+}
+
+export const HUBS: readonly Hub[] = [
+  { id: 'textileErp', industry: 'textile', techs: ['django', 'react', 'postgres', 'rfid'] },
+  { id: 'scada', industry: 'food', techs: ['plc', 'flask', 'mongo', 'sqlserver', 'redis', 'react'] },
+  { id: 'esign', industry: 'finance', techs: ['nest', 'rn'] },
+  { id: 'forecasting', industry: 'retail', techs: ['django', 'postgres', 'prophet', 'vertex'] },
+  { id: 'aiAgent', industry: 'ai', techs: ['python', 'postgres'] },
+];
+
+/** Drawn 1:1 at 328px wide (a 360px screen minus gutters), up to 420px. Font sizes in viewBox units. */
+export const HUB_LAYOUT = {
+  width: 328,
+  height: 290,
+  cx: 164,
+  cy: 145,
+  /** Ellipse the technology pills sit on. */
+  rx: 116,
+  ry: 128,
+  nameFont: 14.5,
+  eyebrowFont: 11,
+  techFont: 11.5,
+} as const;
+
+/**
+ * Technology positions around the hub: evenly spaced, starting at the top. Four techs sit on the diagonals
+ * so none lands level with the (wide) hub.
+ */
+export function hubPoints(count: number): Point[] {
+  const { cx, cy, rx, ry } = HUB_LAYOUT;
+  const start = -Math.PI / 2 + (count % 4 === 0 ? Math.PI / count : 0);
+  return Array.from({ length: count }, (_, i) => {
+    const angle = start + (i * 2 * Math.PI) / count;
+    return { x: Math.round(cx + rx * Math.cos(angle)), y: Math.round(cy + ry * Math.sin(angle)) };
+  });
+}

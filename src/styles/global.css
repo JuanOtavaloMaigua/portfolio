@@ -204,33 +204,22 @@
   }
 
   /*
-   * Hero: the industry network is the background and sizes the section; the copy is stacked on top
+   * Hero. Phones (< 640px): copy, then the project hub below it, in normal flow.
+   * From 640px the industry network is the background and sizes the section; the copy is stacked on top
    * in the same grid cell. --net-w is the rendered SVG width and --net-vb its viewBox width, so
    * --copy-top (viewBox units, see src/data/network.ts) maps to the same pixels as the drawing.
    */
   .hero {
-    --net-w: min(100cqw - 2rem, 26.25rem);
-    --net-vb: 328;
-    --copy-top: 40;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     container-type: inline-size;
     overflow-x: clip;
-  }
-
-  .hero > * {
-    grid-area: 1 / 1;
   }
 
   .hero-copy {
     position: relative;
     z-index: 1;
-    align-self: start;
-    padding-top: calc(var(--net-w) * var(--copy-top) / var(--net-vb));
-    pointer-events: none;
-  }
-
-  .hero-copy a {
-    pointer-events: auto;
+    padding-top: 1.5rem;
   }
 
   /* Soft page-colored halo so edges and pulses passing behind never cut through the letters. */
@@ -241,10 +230,15 @@
       0 0 16px var(--color-bg);
   }
 
-  .hero-net .net {
-    width: var(--net-w);
+  .hero-net {
+    display: none;
+  }
+
+  .hero-hub .hub {
+    width: min(100cqw - 2rem, 26.25rem);
     margin-inline: auto;
-    padding-bottom: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   @media (min-width: 640px) {
@@ -252,6 +246,35 @@
       --net-w: min(100cqw - 3rem, 42rem);
       --net-vb: 680;
       --copy-top: 40;
+      display: grid;
+    }
+
+    .hero > * {
+      grid-area: 1 / 1;
+    }
+
+    .hero-copy {
+      align-self: start;
+      padding-top: calc(var(--net-w) * var(--copy-top) / var(--net-vb));
+      pointer-events: none;
+    }
+
+    .hero-copy a {
+      pointer-events: auto;
+    }
+
+    .hero-hub {
+      display: none;
+    }
+
+    .hero-net {
+      display: block;
+    }
+
+    .hero-net .net {
+      width: var(--net-w);
+      margin-inline: auto;
+      padding-bottom: 1rem;
     }
   }
 
@@ -263,7 +286,7 @@
     }
   }
 
-  /* Hero industry network (src/components/hero/IndustryNetwork.tsx). Colors follow the theme live. */
+  /* Hero industry network, 640px and up (src/components/hero/IndustryNetwork.tsx). Colors follow the theme live. */
   .net-svg {
     display: block;
     width: 100%;
@@ -272,19 +295,8 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .net-tablet,
   .net-desktop {
     display: none;
-  }
-
-  @media (min-width: 640px) {
-    .net-mobile {
-      display: none;
-    }
-
-    .net-tablet {
-      display: block;
-    }
   }
 
   @media (min-width: 1024px) {
@@ -452,6 +464,177 @@
   .net[data-phase="assemble"] .net-edge {
     animation: net-draw 420ms ease-in-out var(--d, 0s) both;
   }
+
+  /* Mobile project hub (src/components/hero/MobileHubNetwork.tsx). The server render is the final state. */
+  .hub-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hub-orbit {
+    fill: none;
+    stroke: var(--color-muted);
+    stroke-opacity: 0.22;
+    stroke-width: 1;
+    stroke-dasharray: 2 5;
+  }
+
+  .hub-spoke {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-opacity: 0.55;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 240ms ease-in;
+  }
+
+  .hub-tech {
+    transition:
+      transform 260ms cubic-bezier(0.5, 0, 0.75, 0),
+      opacity 220ms ease-in;
+  }
+
+  .hub-tech-pill {
+    fill: var(--color-bg);
+    stroke: color-mix(in oklab, var(--color-accent) 45%, var(--color-bg));
+    stroke-width: 1.25;
+  }
+
+  .hub-tech-label {
+    font-family: var(--font-mono);
+    fill: var(--color-fg);
+  }
+
+  .hub-core {
+    cursor: pointer;
+  }
+
+  .hub-core:focus {
+    outline: none;
+  }
+
+  .hub-pill {
+    fill: color-mix(in oklab, var(--color-accent) 10%, var(--color-bg));
+    stroke: var(--color-accent);
+    stroke-width: 1.75;
+  }
+
+  .hub-ring {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    opacity: 0;
+  }
+
+  .hub-core:focus-visible .hub-ring {
+    opacity: 1;
+  }
+
+  .hub-wave {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 1.5;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .hub-eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    fill: var(--color-accent);
+  }
+
+  .hub-name {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    fill: var(--color-fg);
+  }
+
+  .hub-label {
+    transition: opacity 200ms ease;
+  }
+
+  .hub[data-state="out"] .hub-label {
+    opacity: 0;
+  }
+
+  .hub[data-state="out"] .hub-spoke {
+    stroke-dashoffset: 1;
+  }
+
+  .hub[data-state="out"] .hub-tech {
+    transform: translate(var(--fx), var(--fy)) scale(0.3);
+    opacity: 0;
+  }
+
+  .hub-set.is-new .hub-spoke {
+    animation: net-draw 380ms cubic-bezier(0.2, 0.8, 0.2, 1) calc(60ms + var(--i) * 50ms) both;
+  }
+
+  .hub-set.is-new .hub-tech {
+    animation: hub-tech-in 520ms cubic-bezier(0.2, 0.9, 0.25, 1.15) calc(140ms + var(--i) * 50ms) both;
+  }
+
+  .hub-wave.is-new {
+    animation: hub-wave 700ms ease-out both;
+  }
+
+  .hub-caption {
+    min-height: 2.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--color-muted);
+    text-align: center;
+    text-wrap: pretty;
+  }
+
+  .hub-dots {
+    display: flex;
+    justify-content: center;
+    height: 2.75rem;
+  }
+
+  .hub-dot {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hub-dot span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--color-muted) 45%, var(--color-bg));
+    transition:
+      width 250ms ease,
+      background-color 250ms ease;
+  }
+
+  .hub-dot[aria-current] span {
+    width: 1.375rem;
+    background: var(--color-accent);
+  }
+
+  .hub-dot:focus-visible {
+    outline: none;
+  }
+
+  .hub-dot:focus-visible span {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
 }
 
 /* Scroll reveal: only hides content when JS is running and motion is allowed. */
@@ -478,6 +661,28 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes hub-tech-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--fx), var(--fy)) scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hub-wave {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.18, 1.45);
   }
 }
 

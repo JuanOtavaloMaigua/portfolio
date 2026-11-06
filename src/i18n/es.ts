@@ -33,6 +33,16 @@ const es = {
       summary: 'Un ingeniero, cinco industrias conectadas por las mismas tecnologías.',
       hint: 'Elige una industria o tecnología para ver sus conexiones.',
       storyLink: 'Ver historia',
+      hubsLabel: 'Proyectos',
+      hubAria: 'Proyecto {n} de {total}: {name}',
+      nextHub: 'Siguiente proyecto',
+      hubs: {
+        textileErp: { name: 'ERP textil con RFID', industry: 'Textil' },
+        scada: { name: 'Dashboard SCADA', industry: 'Alimentos' },
+        esign: { name: 'Firma electrónica bursátil', industry: 'Finanzas' },
+        forecasting: { name: 'Forecasting de ventas', industry: 'Retail' },
+        aiAgent: { name: 'Agente de IA para reportes', industry: 'IA' },
+      },
       industries: {
         food: 'Alimentos',
         textile: 'Textil',

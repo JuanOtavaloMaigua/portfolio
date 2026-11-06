@@ -1,6 +1,7 @@
 ---
 import IndustryNetwork from '@/components/hero/IndustryNetwork';
-import { INDUSTRIES, INDUSTRY_STORIES, STACKS, TECHS, type IndustryId } from '@/data/network';
+import MobileHubNetwork from '@/components/hero/MobileHubNetwork';
+import { HUBS, INDUSTRY_STORIES, TECHS, type IndustryId } from '@/data/network';
 import { getDictionary, localizePath, storyPaths, type Locale } from '@/i18n';
 
 interface Props {
@@ -16,9 +17,11 @@ const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
 ---
 
 <!--
-  The network is the hero background: it sits in normal flow (so it sizes the hero with no layout shift)
-  and the copy is stacked on top of it in the same grid cell. The copy lets taps through to the network,
-  except on its links. network.ts keeps labels out of the area the copy covers.
+  Phones (< 640px): the copy, then the project hub below it (MobileHubNetwork), in normal flow.
+  From 640px: the industry network is the hero background: it sits in normal flow (so it sizes the hero with
+  no layout shift) and the copy is stacked on top of it in the same grid cell. The copy lets taps through to
+  the network, except on its links. network.ts keeps labels out of the area the copy covers.
+  Both are server-rendered and swapped with CSS; client:visible only hydrates the one that is displayed.
 -->
 <section class="hero" aria-labelledby="hero-title" data-hero>
   <div class="hero-copy container-page">
@@ -38,6 +41,10 @@ const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
     </div>
   </div>
 
+  <div class="hero-hub">
+    <MobileHubNetwork client:visible={{ rootMargin: '200px' }} labels={network} storyHrefs={storyHrefs} />
+  </div>
+
   <div class="hero-net">
     <IndustryNetwork client:visible={{ rootMargin: '200px' }} labels={network} storyHrefs={storyHrefs} />
   </div>
@@ -46,9 +53,9 @@ const storyHrefs: Partial<Record<IndustryId, string>> = Object.fromEntries(
     <p>{network.listTitle}</p>
     <ul>
       {
-        INDUSTRIES.map((industry) => (
+        HUBS.map((hub) => (
           <li>
-            {network.industries[industry]}: {STACKS[industry].map((tech) => TECHS[tech]).join(', ')}
+            {network.hubs[hub.id].name} ({network.industries[hub.industry]}): {hub.techs.map((tech) => TECHS[tech]).join(', ')}
           </li>
         ))
       }

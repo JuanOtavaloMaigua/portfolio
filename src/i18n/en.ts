@@ -35,6 +35,16 @@ const en: Dictionary = {
       summary: 'One engineer, five industries connected by the same technologies.',
       hint: 'Pick an industry or technology to see its connections.',
       storyLink: 'Read the story',
+      hubsLabel: 'Projects',
+      hubAria: 'Project {n} of {total}: {name}',
+      nextHub: 'Next project',
+      hubs: {
+        textileErp: { name: 'Textile ERP with RFID', industry: 'Textile' },
+        scada: { name: 'SCADA dashboard', industry: 'Food manufacturing' },
+        esign: { name: 'Stock-purchase e-signature', industry: 'Finance' },
+        forecasting: { name: 'Sales forecasting', industry: 'Retail' },
+        aiAgent: { name: 'AI reporting agent', industry: 'AI' },
+      },
       industries: {
         food: 'Food manufacturing',
         textile: 'Textile',
