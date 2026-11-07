@@ -1,7 +1,8 @@
 ---
 import Section from '@/components/Section.astro';
-import { SITE } from '@/config/site';
+import { SITE, whatsappUrl } from '@/config/site';
 import { getDictionary, type Locale } from '@/i18n';
+import { siWhatsapp } from 'simple-icons';
 
 interface Props {
   locale: Locale;
@@ -10,23 +11,26 @@ interface Props {
 const { locale } = Astro.props;
 const t = getDictionary(locale);
 
+// WhatsApp is the primary button above, so it is not repeated here.
 const links = [
-  { href: `mailto:${SITE.email}`, label: t.contact.email, detail: SITE.email, external: false },
-  { href: SITE.whatsappUrl, label: t.contact.whatsapp, detail: 'wa.me', external: true },
-  { href: SITE.linkedinUrl, label: t.contact.linkedin, detail: 'in/juan-otavalo', external: true },
-  { href: SITE.githubUrl, label: t.contact.github, detail: 'JuanOtavaloMaigua', external: true },
+  { href: `mailto:${SITE.email}`, label: t.contact.email, detail: SITE.email, external: false, wide: true },
+  { href: SITE.linkedinUrl, label: t.contact.linkedin, detail: 'in/juan-otavalo', external: true, wide: false },
+  { href: SITE.githubUrl, label: t.contact.github, detail: 'JuanOtavaloMaigua', external: true, wide: false },
 ];
 ---
 
 <Section id="contact" eyebrow={t.contact.eyebrow} title={t.contact.title} intro={t.contact.text}>
-  <a href={SITE.calUrl} class="btn btn-primary w-full sm:w-auto" target="_blank" rel="noopener">
+  <a href={whatsappUrl(t.contact.whatsappMessage)} class="btn btn-primary w-full sm:w-auto" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="shrink-0">
+      <path d={siWhatsapp.path} />
+    </svg>
     {t.contact.schedule}
   </a>
 
   <ul class="mt-6 grid gap-2 sm:grid-cols-2">
     {
       links.map((link) => (
-        <li>
+        <li class:list={[link.wide && 'sm:col-span-2']}>
           <a
             href={link.href}
             class="flex min-h-14 items-center justify-between gap-3 rounded-lg border border-border px-4 py-3 transition-colors hover:border-fg"

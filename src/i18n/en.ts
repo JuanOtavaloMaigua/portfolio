@@ -26,19 +26,16 @@ const en: Dictionary = {
     contact: 'Contact',
   },
   hero: {
-    title: 'I build the software that keeps industries moving.',
+    /** Words wrapped in *asterisks* are highlighted (see src/lib/marks.ts). */
+    title: 'I build the *software* that keeps *industries* moving.',
     tagline: 'Full Stack Engineer',
     cta: "Let's talk",
     network: {
-      aria: 'Network of the industries and technologies I have built software with',
-      listTitle: 'Industries and technologies',
-      summary: 'One engineer, five industries connected by the same technologies.',
-      hint: 'Pick an industry or technology to see its connections.',
       storyLink: 'Read the story',
       productsAria: 'Products and solutions I have built, and how they connect',
       productsTitle: 'Products and solutions',
       productsSummary: 'Products I have built and how they connect.',
-      productsHint: 'Tap a product to see how it connects',
+      productsHint: 'Pick a product to see how it connects',
       products: {
         erp: {
           name: 'Custom ERP',
@@ -80,13 +77,6 @@ const en: Dictionary = {
           name: 'Cloud infrastructure',
           description: 'Hetzner, Coolify, GitHub Actions, R2 backups and Sentry: cheaper than managed cloud.',
         },
-      },
-      industries: {
-        food: 'Food manufacturing',
-        textile: 'Textile',
-        retail: 'Retail (forecasting)',
-        ai: 'AI',
-        finance: 'Finance',
       },
     },
   },
@@ -134,8 +124,9 @@ const en: Dictionary = {
     ],
   },
   stack: {
-    eyebrow: '04 · Stack',
-    title: 'Stack',
+    eyebrow: '04 · Technologies',
+    title: "Technologies I've worked with",
+    intro: "Tools I've used on real projects, grouped by area.",
     groups: {
       backend: 'Backend',
       frontend: 'Frontend',
@@ -149,10 +140,10 @@ const en: Dictionary = {
     title: 'Have a project in mind?',
     text: "Tell me what you need and I'll get back to you soon.",
     email: 'Email',
-    whatsapp: 'WhatsApp',
     linkedin: 'LinkedIn',
     github: 'GitHub',
-    schedule: 'Book a call',
+    schedule: 'Book a call on WhatsApp',
+    whatsappMessage: "Hi, I'd like to get a quote for a project I have in mind.",
     sticky: "Let's talk",
   },
   footer: {
@@ -184,7 +175,7 @@ const en: Dictionary = {
     cta: {
       title: 'Does your plant have a similar problem?',
       text: 'If your production data lives in machines, paper sheets or systems that do not talk to each other, let’s talk.',
-      schedule: 'Book a call',
+      schedule: 'Book a call on WhatsApp',
       email: 'Email me',
       home: 'Back to home',
     },

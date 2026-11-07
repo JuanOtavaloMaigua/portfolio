@@ -1,5 +1,6 @@
 ---
 import Section from '@/components/Section.astro';
+import ProcessScene from '@/components/process/ProcessScene.astro';
 import { getDictionary, type Locale } from '@/i18n';
 
 interface Props {
@@ -8,18 +9,147 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getDictionary(locale);
+const scenes = [0, 1, 2, 3] as const;
 ---
 
+<!--
+  A path: vertical (line on the left) below 1024px, horizontal (4 steps in a row) from 1024px,
+  where the path breaks out of the 720px column to give each step room.
+-->
 <Section id="process" eyebrow={t.process.eyebrow} title={t.process.title}>
-  <ol class="grid gap-4 sm:grid-cols-2">
+  <ol class="path">
     {
       t.process.steps.map((step, index) => (
-        <li class="rounded-xl border border-border p-5">
-          <span class="font-mono text-xs text-accent">{String(index + 1).padStart(2, '0')}</span>
-          <h3 class="mt-2 font-semibold text-fg">{step.title}</h3>
-          <p class="mt-1.5 text-sm leading-relaxed text-muted">{step.text}</p>
+        <li class="path-step">
+          <span class="path-dot" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <div class="path-body">
+            <h3 class="font-semibold text-fg">{step.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-muted">{step.text}</p>
+          </div>
+          <div class="path-scene">
+            <ProcessScene scene={scenes[index] ?? 0} />
+          </div>
         </li>
       ))
     }
   </ol>
 </Section>
+
+<style>
+  .path {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  /* The path: a segment from each dot down to the next one. */
+  .path-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 2.25rem;
+    bottom: -2.25rem;
+    left: calc(1rem - 0.75px);
+    width: 1.5px;
+    border-radius: 1px;
+    background: color-mix(in oklab, var(--color-accent) 45%, var(--color-border));
+  }
+
+  .path-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    column-gap: 1rem;
+    row-gap: 1rem;
+  }
+
+  .path-dot {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1.5px solid var(--color-accent);
+    border-radius: 9999px;
+    background: var(--color-bg);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .path-body {
+    padding-top: 0.25rem;
+  }
+
+  .path-scene {
+    grid-column: 2;
+    max-width: 18rem;
+  }
+
+  /* Tablets: the illustration sits beside the text. */
+  @media (min-width: 640px) {
+    .path-step {
+      grid-template-columns: 2rem minmax(0, 1fr) 15rem;
+    }
+
+    .path-scene {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+
+  /* Desktop: a horizontal path, wider than the text column. */
+  @media (min-width: 1024px) {
+    .path {
+      --path-w: min(100vw - 4rem, 62rem);
+      width: var(--path-w);
+      margin-inline: calc((100% - var(--path-w)) / 2);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2rem;
+    }
+
+    /* One line through every dot (the dots sit on top of it). */
+    .path::before {
+      content: '';
+      position: absolute;
+      top: calc(1rem - 0.75px);
+      left: 12.5%;
+      right: 12.5%;
+      height: 1.5px;
+      background: color-mix(in oklab, var(--color-accent) 45%, var(--color-border));
+    }
+
+    .path-step:not(:last-child)::after {
+      content: none;
+    }
+
+    .path-step {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      justify-items: center;
+      row-gap: 1.25rem;
+      text-align: center;
+    }
+
+    .path-dot {
+      grid-row: 1;
+    }
+
+    .path-scene {
+      grid-column: 1;
+      grid-row: 2;
+      width: 100%;
+      max-width: none;
+    }
+
+    .path-body {
+      grid-row: 3;
+      padding-top: 0;
+    }
+  }
+</style>

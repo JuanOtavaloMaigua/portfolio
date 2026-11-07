@@ -36,8 +36,7 @@ UI text (buttons, headings, process steps, labels) lives in `src/i18n/es.ts` and
 
 | What | Where |
 | --- | --- |
-| Cal.com booking link | `calUrl` in `src/config/site.ts` |
-| WhatsApp number (`wa.me/593...`) | `whatsappUrl` in `src/config/site.ts` |
+| WhatsApp number (international format, `593...`) | `whatsappNumber` in `src/config/site.ts`; prefilled messages are `contact.whatsappMessage` in `src/i18n` |
 | Avatar | `src/assets/avatar.jpg` (optimized by `<Image>`) and `public/avatar.jpg` (used in JSON-LD) |
 | Open Graph image (1200×630) | `public/og.png` |
 

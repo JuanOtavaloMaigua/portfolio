@@ -1,16 +1,19 @@
 /**
- * Site-wide constants. Replace the placeholders marked TODO before going live.
+ * Site-wide constants.
  */
 export const SITE = {
   name: 'Juan Otavalo',
   url: 'https://juanotavalo.dev',
   jobTitle: 'Full Stack Engineer',
   email: 'juanotavalomaigua@gmail.com',
-  // TODO: replace with your real Cal.com booking link.
-  calUrl: 'https://cal.com/juanotavalo',
-  // TODO: replace with your WhatsApp number in international format (no +, spaces or dashes).
-  whatsappUrl: 'https://wa.me/593000000000',
+  /** WhatsApp number in international format: country code + number, no +, spaces or national leading 0. */
+  whatsappNumber: '593984787185',
   linkedinUrl: 'https://www.linkedin.com/in/juan-otavalo-44258aa9/',
   githubUrl: 'https://github.com/JuanOtavaloMaigua',
   ogImage: '/og.png',
 } as const;
+
+/** WhatsApp click-to-chat link with a prefilled message (pass the localized `contact.whatsappMessage`). */
+export function whatsappUrl(message: string): string {
+  return `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(message)}`;
+}

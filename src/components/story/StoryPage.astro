@@ -4,7 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import WeaveDivider from '@/components/WeaveDivider.astro';
 import StoryVisual from '@/components/story/StoryVisual';
 import StoryVisualPanel from '@/components/story/StoryVisualPanel';
-import { SITE } from '@/config/site';
+import { SITE, whatsappUrl } from '@/config/site';
 import { entrySlug, type StoryEntry } from '@/lib/content';
 import {
   LOCALE_TAGS,
@@ -172,7 +172,7 @@ const jsonLd = {
     </h2>
     <p class="mt-3 text-muted">{t.story.cta.text}</p>
     <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-      <a href={SITE.calUrl} class="btn btn-primary" target="_blank" rel="noopener">{t.story.cta.schedule}</a>
+      <a href={whatsappUrl(t.contact.whatsappMessage)} class="btn btn-primary" target="_blank" rel="noopener">{t.story.cta.schedule}</a>
       <a href={`mailto:${SITE.email}`} class="btn btn-secondary">{t.story.cta.email}</a>
     </div>
     <a href={`${home}#experience`} class="link mt-10 inline-flex min-h-11 items-center font-mono text-sm">

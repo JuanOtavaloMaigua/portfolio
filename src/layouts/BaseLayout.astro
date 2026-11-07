@@ -1,5 +1,6 @@
 ---
 import '@/styles/global.css';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import SEO from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
@@ -35,6 +36,8 @@ const t = getDictionary(locale);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The hero heading is the LCP element; preloading its font avoids a late swap that re-wraps it. -->
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <!-- Applies the saved theme (light by default) before first paint to avoid a flash. -->
     <script is:inline>
       (function () {

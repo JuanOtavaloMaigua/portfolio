@@ -24,19 +24,16 @@ const es = {
     contact: 'Contacto',
   },
   hero: {
-    title: 'Construyo el software que mueve industrias.',
+    /** Words wrapped in *asterisks* are highlighted (see src/lib/marks.ts). */
+    title: 'Construyo el *software* que mueve *industrias*.',
     tagline: 'Full Stack Engineer',
     cta: 'Hablemos',
     network: {
-      aria: 'Red de industrias y tecnologías con las que he construido software',
-      listTitle: 'Industrias y tecnologías',
-      summary: 'Un ingeniero, cinco industrias conectadas por las mismas tecnologías.',
-      hint: 'Elige una industria o tecnología para ver sus conexiones.',
       storyLink: 'Ver historia',
       productsAria: 'Productos y soluciones que he construido, conectados entre sí',
       productsTitle: 'Productos y soluciones',
       productsSummary: 'Productos que he construido y cómo se conectan entre sí.',
-      productsHint: 'Toca un producto para ver cómo se conecta',
+      productsHint: 'Elige un producto para ver cómo se conecta',
       products: {
         erp: {
           name: 'ERP a medida',
@@ -78,13 +75,6 @@ const es = {
           name: 'Infraestructura cloud',
           description: 'Hetzner, Coolify, GitHub Actions, backups en R2 y Sentry: más barato que la nube gestionada.',
         },
-      },
-      industries: {
-        food: 'Alimentos',
-        textile: 'Textil',
-        retail: 'Retail (pronósticos)',
-        ai: 'IA',
-        finance: 'Finanzas',
       },
     },
   },
@@ -132,8 +122,9 @@ const es = {
     ],
   },
   stack: {
-    eyebrow: '04 · Stack',
-    title: 'Stack',
+    eyebrow: '04 · Tecnologías',
+    title: 'Tecnologías con las que he trabajado',
+    intro: 'Herramientas que he usado en proyectos reales, agrupadas por área.',
     groups: {
       backend: 'Backend',
       frontend: 'Frontend',
@@ -147,10 +138,10 @@ const es = {
     title: '¿Tienes un proyecto en mente?',
     text: 'Cuéntame qué necesitas y te respondo pronto.',
     email: 'Email',
-    whatsapp: 'WhatsApp',
     linkedin: 'LinkedIn',
     github: 'GitHub',
-    schedule: 'Agendar llamada',
+    schedule: 'Agendar una llamada por WhatsApp',
+    whatsappMessage: 'Hola, quiero cotizar un proyecto que tengo en mente.',
     sticky: 'Hablemos',
   },
   footer: {
@@ -182,7 +173,7 @@ const es = {
     cta: {
       title: '¿Tu planta tiene un problema parecido?',
       text: 'Si tus datos de producción viven en máquinas, hojas de papel o sistemas que no se hablan entre sí, conversemos.',
-      schedule: 'Agendar una llamada',
+      schedule: 'Agendar una llamada por WhatsApp',
       email: 'Escríbeme',
       home: 'Volver al inicio',
     },

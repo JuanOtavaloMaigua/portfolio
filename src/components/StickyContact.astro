@@ -1,5 +1,6 @@
 ---
-import { SITE } from '@/config/site';
+import { whatsappUrl } from '@/config/site';
+import { siWhatsapp } from 'simple-icons';
 import { getDictionary, type Locale } from '@/i18n';
 
 interface Props {
@@ -17,9 +18,13 @@ const t = getDictionary(locale);
   data-visible="false"
   inert
 >
-  <div class="mx-auto flex max-w-[720px] gap-2">
-    <a href={SITE.calUrl} class="btn btn-primary flex-1" target="_blank" rel="noopener">{t.contact.sticky}</a>
-    <a href={SITE.whatsappUrl} class="btn btn-secondary" target="_blank" rel="noopener">{t.contact.whatsapp}</a>
+  <div class="mx-auto flex max-w-[720px]">
+    <a href={whatsappUrl(t.contact.whatsappMessage)} class="btn btn-primary flex-1" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="shrink-0">
+        <path d={siWhatsapp.path} />
+      </svg>
+      {t.contact.sticky}
+    </a>
   </div>
 </div>
 

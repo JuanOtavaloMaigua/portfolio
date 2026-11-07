@@ -110,7 +110,22 @@ function setupStickyContact(): void {
   update();
 }
 
+/** Looping illustrations ([data-loop]) only animate while on screen; CSS pauses them without .is-playing. */
+function setupLoops(): void {
+  const scenes = document.querySelectorAll<HTMLElement>('[data-loop]');
+  if (scenes.length === 0 || !('IntersectionObserver' in window)) {
+    scenes.forEach((scene) => scene.classList.add('is-playing'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => entry.target.classList.toggle('is-playing', entry.isIntersecting));
+  });
+  scenes.forEach((scene) => observer.observe(scene));
+}
+
 setupThemeToggle();
 setupMobileMenu();
 setupReveal();
 setupStickyContact();
+setupLoops();

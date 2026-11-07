@@ -1,0 +1,474 @@
+---
+/**
+ * Small looping line illustrations for the "How I work" steps. Inline SVG + CSS keyframes (no GIFs, no JS):
+ * thin rounded strokes in the muted ink, accent for the moving parts. The step text describes each scene,
+ * so the SVG is aria-hidden. The markup without animation is the final, meaningful frame (reduced motion,
+ * no JS); src/scripts/main.ts pauses the loop while the scene is off screen.
+ */
+interface Props {
+  scene: 0 | 1 | 2 | 3;
+}
+
+const { scene } = Astro.props;
+
+/** A person from the waist up: head centered at (x, y), torso down to y + 38. */
+const torso = (x: number, y: number, w = 15) => `M${x - w} ${y + 38}V${y + 30}a${w} ${w} 0 0 1 ${w * 2} 0V${y + 38}`;
+const stations = [40, 100, 160];
+---
+
+<div class="scene" data-loop>
+  <svg
+    viewBox="0 0 200 130"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    {
+      scene === 0 && (
+        <>
+          {/* Understand the business: the owner asks, the developer answers with an idea and a checklist. */}
+          <path d="M14 104H186M34 104v16M166 104v16" />
+          <rect x="84" y="97" width="32" height="7" rx="1.5" />
+          <circle class="paper" cx="52" cy="66" r="9" />
+          <path class="paper" d={torso(52, 66)} />
+          <circle class="paper" cx="148" cy="66" r="9" />
+          <path class="paper" d={torso(148, 66)} />
+          <g class="s1-ask">
+            <path class="paper" d="M24 14h44a10 10 0 0 1 10 10v12a10 10 0 0 1-10 10H54l-6 8-3-8H24a10 10 0 0 1-10-10V24a10 10 0 0 1 10-10z" />
+            <path class="a" d="M27 25.5a5 5 0 1 1 6.5 4.8c-1.3.5-1.5 1.3-1.5 2.7" />
+            <circle class="fa" cx="32" cy="38" r="1.3" />
+            <path d="M44 25h22M44 31h16M44 37h19" />
+          </g>
+          <g class="s1-answer">
+            <path class="paper" d="M132 14h44a10 10 0 0 1 10 10v12a10 10 0 0 1-10 10h-21l-3 8-6-8h-14a10 10 0 0 1-10-10V24a10 10 0 0 1 10-10z" />
+            <g class="a">
+              <path d="M134 33a6.5 6.5 0 1 1 9 0c-1 1-1.4 1.8-1.4 3h-6.2c0-1.2-.4-2-1.4-3z" />
+              <path d="M136 39.5h5" />
+              <path class="s1-rays" d="M138.5 17v-1M130.5 21.5l-.8-.6M146.5 21.5l.8-.6" />
+              <path d="M155 25l2 2 4-4M155 35l2 2 4-4" />
+            </g>
+            <path d="M165 25h14M165 35h10" />
+          </g>
+        </>
+      )
+    }
+    {
+      scene === 1 && (
+        <>
+          {/* Rapid prototype: the client asks for a change and a block of the UI moves. */}
+          <path d="M6 110H194" />
+          <rect class="paper" x="16" y="24" width="108" height="72" rx="5" />
+          <path class="paper" d="M8 98H132L126 106H14Z" />
+          <path d="M26 33h18" />
+          <circle cx="110" cy="33" r="1.4" />
+          <circle cx="104" cy="33" r="1.4" />
+          <rect class="s2-a fa-soft a" x="26" y="42" width="38" height="22" rx="3" />
+          <rect class="s2-b" x="72" y="42" width="42" height="22" rx="3" />
+          <path d="M26 74h60M26 83h40" />
+          <circle class="paper" cx="166" cy="70" r="9" />
+          <path class="paper" d={torso(166, 70)} />
+          <g class="s2-ask">
+            <path class="paper" d="M148 16h38a8 8 0 0 1 8 8v10a8 8 0 0 1-8 8h-15l-4 8-4-8h-15a8 8 0 0 1-8-8V24a8 8 0 0 1 8-8z" />
+            <g class="a">
+              <path d="M150 38.5l1.3-4.8 9.8-9.8 3.5 3.5-9.8 9.8z" />
+              <path d="M158.6 26.4l3.5 3.5" />
+              <path d="M171 32q2.5-4 5 0t5 0t5 0" />
+            </g>
+          </g>
+        </>
+      )
+    }
+    {
+      scene === 2 && (
+        <>
+          {/* Production deployment: the same app live on three screens, data flowing from the server. */}
+          <path d="M6 82H194" />
+          <path class="ink-soft" d="M100 24C100 33 40 30 40 42M100 24V42M100 24C100 33 160 30 160 42" />
+          <path class="a s3-flow" d="M100 24C100 33 40 30 40 42M100 24V42M100 24C100 33 160 30 160 42" />
+          <rect class="paper" x="86" y="6" width="28" height="18" rx="3" />
+          <path d="M92 12.5h10M92 17.5h7" />
+          <circle class="fa" cx="122" cy="11" r="2.5" stroke="none" />
+          <circle class="a s3-live" cx="122" cy="11" r="2.5" stroke-width="1.5" />
+          {
+            stations.map((x, i) => (
+              <g style={`--i: ${i}`}>
+                <rect class="paper" x={x - 23} y="42" width="46" height="30" rx="3" />
+                <path d={`M${x} 72v6M${x - 8} 78h16M${x - 16} 49h11`} />
+                <path class="a s3-bar" d={`M${x - 14} 66v-6`} />
+                <path class="a s3-bar s3-bar-2" d={`M${x - 6} 66v-10`} />
+                <path class="a s3-bar s3-bar-3" d={`M${x + 2} 66v-8`} />
+                <path class="ink-soft" d={`M${x + 9} 57h6M${x + 9} 63h4`} />
+                <circle class="paper" cx={x} cy="96" r="7" />
+                <path class="paper" d={`M${x - 13} 124v-6a13 13 0 0 1 26 0v6`} />
+              </g>
+            ))
+          }
+        </>
+      )
+    }
+    {
+      scene === 3 && (
+        <>
+          {/* Maintenance and monitoring: an alert on the chart turns into a check while support talks. */}
+          <path d="M6 110H194" />
+          <circle class="paper" cx="48" cy="62" r="10" />
+          <path class="paper" d={torso(48, 64, 17)} />
+          <path d="M36 61a12 12 0 0 1 24 0" />
+          <rect class="paper" x="33" y="58" width="5" height="9" rx="2.5" />
+          <rect class="paper" x="58" y="58" width="5" height="9" rx="2.5" />
+          <path d="M36 67q1 9 10 9" />
+          <circle class="fa" cx="47.5" cy="76" r="1.8" stroke="none" />
+          <path class="a s4-waves" d="M66 66a6 6 0 0 1 0 8M71 62a12 12 0 0 1 0 16" />
+          <rect class="paper" x="84" y="20" width="104" height="68" rx="5" />
+          <path d="M136 88v14M124 110v-8h24v8" />
+          <path class="ink-soft" d="M94 78H178" />
+          <path class="s4-line" pathLength="1" d="M94 70L108 63L121 67L135 48L149 61L163 55L178 58" />
+          <g class="s4-alert a">
+            <path class="paper" d="M135 25l8 14h-16z" />
+            <path d="M135 30.5v3.5" />
+            <circle class="fa" cx="135" cy="36.5" r="0.6" />
+          </g>
+          <g class="s4-ok">
+            <circle class="paper ok" cx="135" cy="32" r="7.5" />
+            <path class="ok" d="M131.5 32.2l2.5 2.5 4.5-5" />
+          </g>
+        </>
+      )
+    }
+  </svg>
+</div>
+
+<style>
+  .scene {
+    aspect-ratio: 200 / 130;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    background: color-mix(in oklab, var(--color-surface) 55%, var(--color-bg));
+    color: color-mix(in oklab, var(--color-muted) 85%, var(--color-bg));
+    --scene-bg: color-mix(in oklab, var(--color-surface) 55%, var(--color-bg));
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    stroke-width: 1.75;
+  }
+
+  .paper {
+    fill: var(--scene-bg);
+  }
+
+  .a {
+    stroke: var(--color-accent);
+  }
+
+  .fa {
+    fill: var(--color-accent);
+    stroke: none;
+  }
+
+  .fa-soft {
+    fill: color-mix(in oklab, var(--color-accent) 14%, var(--scene-bg));
+  }
+
+  .ink-soft {
+    opacity: 0.45;
+  }
+
+  .ok {
+    stroke: var(--color-success);
+  }
+
+  .s2-a,
+  .s2-b,
+  g[class^="s"],
+  .s3-bar {
+    transform-box: fill-box;
+  }
+
+  .s1-ask,
+  .s2-ask {
+    transform-origin: 50% 100%;
+  }
+
+  .s1-answer {
+    transform-origin: 40% 100%;
+  }
+
+  .s3-bar {
+    transform-origin: 50% 100%;
+  }
+
+  .s4-alert,
+  .s4-ok {
+    transform-origin: center;
+  }
+
+  /* Final frame (no animation): the alert is resolved. */
+  .s4-alert {
+    opacity: 0;
+  }
+
+  .s3-flow {
+    stroke-dasharray: 2 9;
+    stroke-width: 2.25;
+  }
+
+  .s3-live {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .s1-ask {
+      animation: ps-ask 6s ease-in-out infinite both;
+    }
+
+    .s1-answer {
+      animation: ps-answer 6s ease-in-out infinite both;
+    }
+
+    .s1-rays {
+      animation: ps-blink 6s ease-in-out infinite both;
+    }
+
+    .s2-ask {
+      animation: ps-ask 6s ease-in-out infinite both;
+    }
+
+    .s2-a {
+      animation: ps-swap-right 6s ease-in-out infinite both;
+    }
+
+    .s2-b {
+      animation: ps-swap-left 6s ease-in-out infinite both;
+    }
+
+    .s3-flow {
+      animation: ps-flow 1.4s linear infinite;
+    }
+
+    .s3-live {
+      animation: ps-ping 2s ease-out infinite;
+    }
+
+    .s3-bar {
+      animation: ps-bar 3s ease-in-out calc(var(--i) * 0.25s) infinite both;
+    }
+
+    .s3-bar-2 {
+      animation-delay: calc(var(--i) * 0.25s + 0.2s);
+    }
+
+    .s3-bar-3 {
+      animation-delay: calc(var(--i) * 0.25s + 0.4s);
+    }
+
+    .s4-line {
+      stroke-dasharray: 1;
+      animation: ps-draw 6s ease-in-out infinite both;
+    }
+
+    .s4-alert {
+      animation: ps-alert 6s ease-in-out infinite both;
+    }
+
+    .s4-ok {
+      animation: ps-ok 6s ease-in-out infinite both;
+    }
+
+    .s4-waves {
+      animation: ps-talk 6s ease-in-out infinite both;
+    }
+
+    /* Loop only while visible: main.ts toggles .is-playing with an IntersectionObserver. */
+    :global(html.js) .scene:not(.is-playing) * {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes ps-ask {
+    0%,
+    4% {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    10%,
+    42% {
+      opacity: 1;
+      transform: none;
+    }
+    48%,
+    100% {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+  }
+
+  @keyframes ps-answer {
+    0%,
+    50% {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    56%,
+    90% {
+      opacity: 1;
+      transform: none;
+    }
+    96%,
+    100% {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+  }
+
+  @keyframes ps-blink {
+    0%,
+    58% {
+      opacity: 0;
+    }
+    64%,
+    72% {
+      opacity: 1;
+    }
+    76% {
+      opacity: 0.3;
+    }
+    80%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* The client's change: block A moves right, block B left (both 44 units), held, then back. */
+  @keyframes ps-swap-right {
+    0%,
+    48% {
+      transform: none;
+    }
+    60%,
+    88% {
+      transform: translateX(46px);
+    }
+    98%,
+    100% {
+      transform: none;
+    }
+  }
+
+  @keyframes ps-swap-left {
+    0%,
+    48% {
+      transform: none;
+    }
+    60%,
+    88% {
+      transform: translateX(-46px);
+    }
+    98%,
+    100% {
+      transform: none;
+    }
+  }
+
+  @keyframes ps-flow {
+    to {
+      stroke-dashoffset: -22;
+    }
+  }
+
+  @keyframes ps-ping {
+    0% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(3);
+    }
+  }
+
+  @keyframes ps-bar {
+    0%,
+    100% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(0.45);
+    }
+  }
+
+  @keyframes ps-draw {
+    0% {
+      stroke-dashoffset: 1;
+    }
+    22%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ps-alert {
+    0%,
+    24% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    30% {
+      opacity: 1;
+      transform: none;
+    }
+    36% {
+      opacity: 0.35;
+    }
+    42% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes ps-ok {
+    0%,
+    50% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    58%,
+    92% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ps-talk {
+    0%,
+    30%,
+    60%,
+    100% {
+      opacity: 0;
+    }
+    36%,
+    54% {
+      opacity: 1;
+    }
+    45% {
+      opacity: 0.4;
+    }
+  }
+</style>

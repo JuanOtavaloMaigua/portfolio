@@ -1,6 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
-import { PRODUCT_IDS, PRODUCT_LAYOUT, PRODUCT_LINKS, productNeighbors, type ProductId } from '@/data/network';
-import type { NetworkLabels } from '@/components/hero/IndustryNetwork';
+import {
+  PRODUCT_IDS,
+  PRODUCT_LAYOUT_KEYS,
+  PRODUCT_LAYOUTS,
+  PRODUCT_LINKS,
+  WIDE_QUERY,
+  productNeighbors,
+  type ProductId,
+  type ProductLayoutKey,
+} from '@/data/network';
+import type { Dictionary } from '@/i18n/es';
+
+export type NetworkLabels = Dictionary['hero']['network'];
 
 interface Props {
   labels: NetworkLabels;
@@ -9,7 +20,10 @@ interface Props {
 }
 
 /**
- * Same phases as IndustryNetwork:
+ * Every layout (compact below 640px, wide above) is server-rendered: pills are positioned with per-layout CSS
+ * variables and each layout has its own link drawing, swapped with CSS, so the right one shows before hydration
+ * with no layout shift. JS only animates the layout that is displayed.
+ *
  * "static":   server render, no JS yet, or reduced motion. Final state, no motion.
  * "hidden":   hydrated while off screen; reset so it can assemble when it scrolls in.
  * "assemble": products pop in from the ERP outwards while the links draw (~1.2s).
@@ -18,7 +32,7 @@ interface Props {
  */
 type Phase = 'static' | 'hidden' | 'assemble' | 'trace' | 'live';
 
-const L = PRODUCT_LAYOUT;
+const LAYOUTS = PRODUCT_LAYOUTS;
 const ASSEMBLE_MS = 1300;
 const TRACE_MS = 1500;
 /** Float amplitude in CSS px. Small enough that links never reach a pill they do not connect. */
@@ -26,9 +40,10 @@ const FLOAT_AMPLITUDE = 2.5;
 const PULSE_MS = 1400;
 const MAX_IDLE_PULSES = 2;
 
-/** Assemble order: the ERP first, then products by distance from it. */
+/** Assemble order: the ERP first, then products by distance from it (in the compact layout). */
 const ORDER = [...PRODUCT_IDS].sort((a, b) => {
-  const d = (id: ProductId) => Math.hypot(L.nodes[id].x - L.nodes.erp.x, L.nodes[id].y - L.nodes.erp.y);
+  const n = LAYOUTS.compact.nodes;
+  const d = (id: ProductId) => Math.hypot(n[id].x - n.erp.x, n[id].y - n.erp.y);
   return d(a) - d(b);
 });
 const nodeDelay = (id: ProductId) => ORDER.indexOf(id) * 0.07;
@@ -46,12 +61,12 @@ function floatParams(index: number) {
 
 const pct = (value: number, total: number) => `${((value / total) * 100).toFixed(3)}%`;
 
-export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
+export default function ProductNetwork({ labels, storyHrefs }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const pillRefs = useRef(new Map<ProductId, HTMLElement>());
-  const linkRefs = useRef<(SVGPathElement | null)[]>([]);
-  const pulseRefs = useRef<(SVGCircleElement | null)[]>([]);
+  const linkRefs = useRef<Record<ProductLayoutKey, (SVGPathElement | null)[]>>({ compact: [], wide: [] });
+  const pulseRefs = useRef<Record<ProductLayoutKey, (SVGCircleElement | null)[]>>({ compact: [], wide: [] });
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>('static');
   const [selected, setSelected] = useState<ProductId | null>(null);
@@ -109,11 +124,17 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
     const stage = stageRef.current;
     if (!animating || !root || !stage) return;
 
+    /** The layout CSS is displaying; only its links and pulses are animated. */
+    const wideQuery = window.matchMedia(WIDE_QUERY);
+    let key: ProductLayoutKey = wideQuery.matches ? 'wide' : 'compact';
     /** CSS px per viewBox unit; pills float in px, links are drawn in viewBox units. */
-    let scale = stage.clientWidth / L.width || 1;
-    const resize = new ResizeObserver(() => {
-      scale = stage.clientWidth / L.width || 1;
-    });
+    let scale = 1;
+    const measure = () => {
+      key = wideQuery.matches ? 'wide' : 'compact';
+      scale = stage.clientWidth / LAYOUTS[key].width || 1;
+    };
+    measure();
+    const resize = new ResizeObserver(measure);
     resize.observe(stage);
 
     const params = new Map(PRODUCT_IDS.map((id, i) => [id, floatParams(i + 1)]));
@@ -137,6 +158,9 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
       raf = 0;
       if (!visible || document.hidden) return;
       const amp = FLOAT_AMPLITUDE * Math.min(1, (now - start) / 1500);
+      const L = LAYOUTS[key];
+      const links = linkRefs.current[key];
+      const dots = pulseRefs.current[key];
       const at = new Map<ProductId, { x: number; y: number }>();
 
       for (const id of PRODUCT_IDS) {
@@ -156,7 +180,7 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
         return a && b ? { x1: a.x, y1: a.y, x2: b.x, y2: b.y } : null;
       };
 
-      linkRefs.current.forEach((path, k) => {
+      links.forEach((path, k) => {
         const e = ends(k);
         if (path && e) path.setAttribute('d', `M${e.x1.toFixed(2)} ${e.y1.toFixed(2)}L${e.x2.toFixed(2)} ${e.y2.toFixed(2)}`);
       });
@@ -168,7 +192,7 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
         nextSpawn = now + 1100 + Math.random() * 1400;
       }
 
-      pulseRefs.current.forEach((circle) => circle?.setAttribute('opacity', '0'));
+      for (const layout of PRODUCT_LAYOUT_KEYS) pulseRefs.current[layout].forEach((circle) => circle?.setAttribute('opacity', '0'));
       for (let i = pulses.length - 1; i >= 0; i--) {
         const pulse = pulses[i];
         if (!pulse) continue;
@@ -177,7 +201,7 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
           pulses.splice(i, 1);
           continue;
         }
-        const circle = pulseRefs.current[i];
+        const circle = dots[i];
         const e = ends(pulse.link);
         if (t < 0 || !circle || !e) continue;
         const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
@@ -238,44 +262,56 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
       <div
         ref={stageRef}
         className="pnet-stage"
-        style={{ aspectRatio: `${L.width} / ${L.height}` }}
+        style={{ '--ar-compact': `${LAYOUTS.compact.width} / ${LAYOUTS.compact.height}`, '--ar-wide': `${LAYOUTS.wide.width} / ${LAYOUTS.wide.height}` } as CSSProperties}
         onClick={onStageClick}
       >
-        <svg viewBox={`0 0 ${L.width} ${L.height}`} className="pnet-svg" aria-hidden="true" focusable="false">
-          {PRODUCT_LINKS.map(([a, b], k) => {
-            const pa = L.nodes[a];
-            const pb = L.nodes[b];
-            return (
-              <path
-                key={`${a}-${b}`}
-                ref={(el) => {
-                  linkRefs.current[k] = el;
-                }}
-                className={`pnet-link${lit?.links.has(k) ? ' is-on' : ''}`}
-                d={`M${pa.x} ${pa.y}L${pb.x} ${pb.y}`}
-                pathLength={1}
-                style={{ '--d': `${linkDelay(k)}s` } as CSSProperties}
-              />
-            );
-          })}
-          {PRODUCT_LINKS.map(([a, b], k) => (
-            <circle
-              key={`p-${a}-${b}`}
-              ref={(el) => {
-                pulseRefs.current[k] = el;
-              }}
-              className="pnet-pulse"
-              r={2.6}
-              cx={-10}
-              cy={-10}
-              opacity={0}
-            />
-          ))}
-        </svg>
+        {PRODUCT_LAYOUT_KEYS.map((layout) => {
+          const L = LAYOUTS[layout];
+          return (
+            <svg
+              key={layout}
+              viewBox={`0 0 ${L.width} ${L.height}`}
+              className={`pnet-svg pnet-svg-${layout}`}
+              aria-hidden="true"
+              focusable="false"
+            >
+              {PRODUCT_LINKS.map(([a, b], k) => {
+                const pa = L.nodes[a];
+                const pb = L.nodes[b];
+                return (
+                  <path
+                    key={`${a}-${b}`}
+                    ref={(el) => {
+                      linkRefs.current[layout][k] = el;
+                    }}
+                    className={`pnet-link${lit?.links.has(k) ? ' is-on' : ''}`}
+                    d={`M${pa.x} ${pa.y}L${pb.x} ${pb.y}`}
+                    pathLength={1}
+                    style={{ '--d': `${linkDelay(k)}s` } as CSSProperties}
+                  />
+                );
+              })}
+              {PRODUCT_LINKS.map(([a, b], k) => (
+                <circle
+                  key={`p-${a}-${b}`}
+                  ref={(el) => {
+                    pulseRefs.current[layout][k] = el;
+                  }}
+                  className="pnet-pulse"
+                  r={2.6}
+                  cx={-10}
+                  cy={-10}
+                  opacity={0}
+                />
+              ))}
+            </svg>
+          );
+        })}
 
         <div className="pnet-nodes" role="group" aria-label={labels.productsAria}>
           {PRODUCT_IDS.map((id) => {
-            const point = L.nodes[id];
+            const c = LAYOUTS.compact.nodes[id];
+            const w = LAYOUTS.wide.nodes[id];
             const on = lit?.nodes.has(id) ?? false;
             const classes = `pnet-node${id === 'erp' ? ' is-main' : ''}${on ? ' is-on' : ''}${selected === id ? ' is-sel' : ''}`;
             const setRef = (el: HTMLElement | null) => {
@@ -286,7 +322,15 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
               <div
                 key={id}
                 className={classes}
-                style={{ left: pct(point.x, L.width), top: pct(point.y, L.height), '--d': `${nodeDelay(id)}s` } as CSSProperties}
+                style={
+                  {
+                    '--x-compact': pct(c.x, LAYOUTS.compact.width),
+                    '--y-compact': pct(c.y, LAYOUTS.compact.height),
+                    '--x-wide': pct(w.x, LAYOUTS.wide.width),
+                    '--y-wide': pct(w.y, LAYOUTS.wide.height),
+                    '--d': `${nodeDelay(id)}s`,
+                  } as CSSProperties
+                }
               >
                 <div className="pnet-body">
                   {mounted ? (
@@ -328,10 +372,16 @@ export default function MobileProductNetwork({ labels, storyHrefs }: Props) {
               </>
             )}
           </>
-        ) : mounted ? (
-          labels.productsHint
         ) : (
-          labels.productsSummary
+          // Both idle texts share one grid cell, so swapping them on hydration never resizes the card.
+          <span className="pnet-idle">
+            <span aria-hidden={!mounted || undefined} className={mounted ? undefined : 'is-off'}>
+              {labels.productsHint}
+            </span>
+            <span aria-hidden={mounted || undefined} className={mounted ? 'is-off' : undefined}>
+              {labels.productsSummary}
+            </span>
+          </span>
         )}
         </p>
       </div>
